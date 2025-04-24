@@ -112,6 +112,6 @@ resource "aws_route_table_association" "pvt_subnet_association_2" {
 }
 
 
-terraform {
-  backend "s3" {}
-}
+#terraform {
+ # backend "s3" {}
+#}
