@@ -80,15 +80,15 @@ resource "aws_route_table_association" "pub_subnet_association_2" {
   route_table_id = aws_route_table.igw_route_table.id
 }
 
-#resource "aws_nat_gateway" "nat_pvt_subnet" {
-#  connectivity_type                  = "private"
-#  subnet_id                          = aws_subnet.dev_1apub_subnet.id
-#  depends_on = [aws_internet_gateway.igw_public_subnet]
+resource "aws_nat_gateway" "nat_pvt_subnet" {
+  connectivity_type                  = "private"
+  subnet_id                          = aws_subnet.dev_1apub_subnet.id
+  depends_on = [aws_internet_gateway.igw_public_subnet]
   
-#  tags = {
-#    Name = "nat"
-#  }
-#}
+  tags = {
+    Name = "nat"
+  }
+}
 
 resource "aws_route_table" "nat_route_table" {
   vpc_id = aws_vpc.dev_vpc.id
