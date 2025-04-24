@@ -110,8 +110,3 @@ resource "aws_route_table_association" "pvt_subnet_association_2" {
   subnet_id      = aws_subnet.dev_1bpvt_subnet.id
   route_table_id = aws_route_table.nat_route_table.id
 }
-
-
-terraform {
-  backend "s3" {}
-}

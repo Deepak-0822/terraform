@@ -1,13 +1,7 @@
 terraform {
-  source = "./"
-}
-
-remote_state {
-  backend = "s3"
-  config  = {
-    encrypt        = true
-    bucket         = "demo-tfstate-testing"
-    key            = "aws/infra/terraform.tfstate"
-    region         = "ap-south-1"
+  backend "s3" {
+    bucket = "demo-tfstate-testing"
+    key    = "path/to/my/key"
+    region = "ap-south-1"
   }
 }
