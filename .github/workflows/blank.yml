@@ -1,7 +1,7 @@
 name: Folder Creation Workflows
 
 on:
-  workflow_call:
+  workflow_dispatch:
     
 jobs:
   deploy:
