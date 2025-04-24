@@ -33,7 +33,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.4.0
+          terraform_version: 1.1.9
 
       # Check for terraform version and status
       - name: Terraform Version
