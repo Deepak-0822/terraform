@@ -8,10 +8,6 @@ jobs:
     name: Terraform Plan & Apply
     runs-on: ubuntu-latest
 
-    # defaults:
-    #   run:
-    #     working-directory: ./modules/infra  # Updated path
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
