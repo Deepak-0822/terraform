@@ -81,9 +81,11 @@ resource "aws_route_table_association" "pub_subnet_association_2" {
 }
 
 resource "aws_nat_gateway" "nat_pvt_subnet" {
-  connectivity_type                  = "public"
+  connectivity_type                  = "private"
   subnet_id                          = aws_subnet.dev_1apub_subnet.id
-    tags = {
+  depends_on = [aws_internet_gateway.igw_public_subnet]
+  
+  tags = {
     Name = "nat"
   }
 }
