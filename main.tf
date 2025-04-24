@@ -117,7 +117,6 @@ terraform {
   backend "s3" {
     bucket       = "demo-tfstate-testing"
     key          = "path/to/state"
-    use_lockfile = true
     region       = "ap-south-1"
   }
 }
