@@ -10,7 +10,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./infra  # Use a relative path
+        working-directory: ./modules/infra  # Updated path
 
     steps:
       - name: Checkout Repository
