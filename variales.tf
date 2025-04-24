@@ -22,13 +22,3 @@ variable "dev-1bpvt-subnet-cidr" {
   description = "1b private subunet cidr range"
   type        = string
 }
-
-variable "cluster_name" {
-  description = "EKS Cluster Name"
-  type        = string
-}
-
-variable "allowed_cidr_blocks" {
-  description = "List of allowed CIDR blocks for security group"
-  type        = list(string)
-}
