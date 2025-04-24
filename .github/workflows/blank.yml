@@ -34,7 +34,7 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
-              run: terraform apply -auto-approve -target="aws_vpc.dev_vpc"
+        run: terraform apply -auto-approve -target="aws_vpc.dev_vpc"
 
       - name: Terraform destroy
         run: terraform destroy --auto-approve
