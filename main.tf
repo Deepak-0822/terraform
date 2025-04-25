@@ -13,6 +13,7 @@ module "vpc" {
   one_nat_gateway_per_az = false
   enable_vpn_gateway = false
   reuse_nat_ips       = true 
+  external_nat_ip_ids = "1"   # <= IPs specified here as input to the module
 
   igw_tags = {
     Name = "${var.environment}-${var.project_name}-igw"
@@ -28,4 +29,10 @@ module "vpc" {
     Terraform = "true"
     Environment = "dev"
   }
+}
+
+resource "aws_eip" "nat" {
+  count = 3
+
+  vpc = true
 }
