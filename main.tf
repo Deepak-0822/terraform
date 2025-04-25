@@ -17,9 +17,6 @@ module "vpc" {
   external_nat_ip_ids = [aws_eip.nat.allocation_id] # <= Directly referencing the allocation_id
   manage_default_network_acl = false
 
-  igw_tags = {
-    Name = "${var.environment}-${var.project_name}-igw"
-  }
   public_route_table_tags = {
     Name = "${var.environment}-${var.project_name}-pub-igw-rt"
   }
@@ -27,6 +24,12 @@ module "vpc" {
     Name = "${var.environment}-${var.project_name}-pvt-nat-rt"
   }
 
+  igw_tags = {
+    Name = "${var.environment}-${var.project_name}-igw"
+  }
+  nat_gateway_tags = {
+    Name = "${var.environment}-${var.project_name}-nat"
+  }
   tags = {
     Terraform = "true"
     Environment = "${var.environment}"
