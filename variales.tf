@@ -33,12 +33,12 @@ variable "public_subnets" {
 
 variable "single_nat_gateway" {
   description = "The meantion single az true or false."
-  type        = boolean
+  type        = bool
   default     = null
 }
 
 variable "one_nat_gateway_per_az" {
   description = "The meantioning per az per nat."
-  type        = boolean
+  type        = bool
   default     = null
 }
