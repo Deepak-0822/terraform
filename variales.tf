@@ -30,3 +30,15 @@ variable "public_subnets" {
   type        = list(string)
   default     = null
 }
+
+variable "single_nat_gateway" {
+  description = "The meantion single az true or false."
+  type        = boolean
+  default     = null
+}
+
+variable "one_nat_gateway_per_az" {
+  description = "The meantioning per az per nat."
+  type        = boolean
+  default     = null
+}
