@@ -29,14 +29,11 @@ module "vpc" {
 
   tags = {
     Terraform = "true"
-    Environment = "dev"
+    Environment = "${var.environment}"
   }
 }
 
 resource "aws_eip" "nat" {
   domain   = "vpc"
+  tags     = "${var.environment}-nat-eip"
 }
-
-# data "aws_eip" "by_allocation_id" {
-#   id = "aws_eip.nat.id"
-# }
