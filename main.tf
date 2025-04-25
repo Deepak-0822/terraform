@@ -13,7 +13,8 @@ module "vpc" {
   one_nat_gateway_per_az = false
   enable_vpn_gateway = false
   reuse_nat_ips       = true 
-  external_nat_ip_ids = [1]   # <= IPs specified here as input to the module
+  # external_nat_ip_ids = [data.aws_eip.by_allocation_id.id]   # <= IPs specified here as input to the module
+  external_nat_ip_ids = [aws_eip.nat.allocation_id] # <= Directly referencing the allocation_id
   manage_default_network_acl = false
 
   igw_tags = {
@@ -31,3 +32,11 @@ module "vpc" {
     Environment = "dev"
   }
 }
+
+resource "aws_eip" "nat" {
+  domain   = "vpc"
+}
+
+# data "aws_eip" "by_allocation_id" {
+#   id = "aws_eip.nat.id"
+# }
