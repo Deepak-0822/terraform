@@ -5,7 +5,6 @@ variable "environment" {
 variable "project_name" {
   description = "The CIDR of the VPC"
   type        = string
-  default     = null
 }
 
 variable "vpc_cidr" {
