@@ -35,7 +35,7 @@ module "vpc" {
 
 resource "aws_eip" "nat" {
   domain   = "vpc"
-    tags = {
+  tags = {
     Environment = "${var.environment}-nat-eip"
   }
 }
