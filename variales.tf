@@ -1,24 +1,33 @@
-variable "dev-vpc-cidr" {
-  description = "vpc cidr range"
-  type        = string
+variable "environment" {
+  type    = string
 }
 
-variable "dev-1apub-subnet-cidr" {
-  description = "1a public subunet cidr range"
+variable "project_name" {
+  description = "The CIDR of the VPC"
   type        = string
+  default     = null
 }
 
-variable "dev-1bpub-subnet-cidr" {
-  description = "1b public subunet cidr range"
+variable "vpc_cidr" {
+  description = "The CIDR of the VPC"
   type        = string
+  default     = null
 }
 
-variable "dev-1apvt-subnet-cidr" {
-  description = "1a private subunet cidr range"
-  type        = string
+variable "subnet_azs" {
+  description = "The list of azs where the subnets should be located"
+  type        = list(string)
+  default     = null
 }
 
-variable "dev-1bpvt-subnet-cidr" {
-  description = "1b private subunet cidr range"
-  type        = string
+variable "private_subnets" {
+  description = "The list of private subnets CIDRs."
+  type        = list(string)
+  default     = null
+}
+
+variable "public_subnets" {
+  description = "The list of public subnets CIDRs."
+  type        = list(string)
+  default     = null
 }
