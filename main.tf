@@ -61,3 +61,12 @@ module "ec2_instance" {
   }
 }
 
+module "security-group" {
+  source = "./modules/security-group"
+
+  name        = "user-service"
+  vpc_id      = module.vpc.id 
+
+  ingress_rules            = ["all-all"]
+  egress_rules             = ["all-all"]
+}
