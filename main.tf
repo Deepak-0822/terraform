@@ -47,7 +47,7 @@ module "ec2_instance" {
   source = "./modules/ec2"
 
   name = "${var.environment}-${var.project_name}-ec2"
-  ami  = ami-0e35ddab05955cf57
+  ami  = "ami-0e35ddab05955cf57"
   associate_public_ip_address = true
   instance_type          = var.instance_type
   key_name               = "my-private-key"
