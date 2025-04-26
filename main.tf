@@ -65,7 +65,7 @@ module "security-group" {
   source = "./modules/security-group"
 
   name        = "user-service"
-  vpc_id      = module.vpc.aws_vpc.this[0]
+  vpc_id      = module.vpc.aws_vpc.this[0].id
 
   ingress_rules            = ["all-all"]
   egress_rules             = ["all-all"]
