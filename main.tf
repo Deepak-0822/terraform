@@ -41,3 +41,21 @@ resource "aws_eip" "nat" {
   Name       = "${var.environment}-${var.project_name}-nat-eip"
   }
 }
+
+#### Ec2
+module "ec2_instance" {
+  source  = "./modules/"
+
+  name = "${var.environment}-${var.project_name}-ec2"
+
+  instance_type          = var.instance_type
+  key_name               = "user1"
+  monitoring             = true
+  vpc_security_group_ids = [module.vpc.aws_default_security_group]
+  subnet_id              = module.vpc.aws_subnet.public.id
+
+  tags = {
+    Terraform = "true"
+    Environment = "${var.environment}-${var.project_name}"
+  }
+}
