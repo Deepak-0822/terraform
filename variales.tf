@@ -50,6 +50,3 @@ variable "instance_type" {
   type        = string
   default     = null
 }
-
-variable "private_key_name" {
-}
