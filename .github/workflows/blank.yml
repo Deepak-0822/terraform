@@ -45,12 +45,20 @@ jobs:
         env:
           TF_VAR_private_key_name: private_key.pem
 
-        run: terraform plan -out=tfplan
+        working-directory: /home/runner/work/terraform/terraform
+        run: |
+         pwd
+         ls  
+         terraform plan -out=tfplan
 
       - name: Terraform Apply
         env:
           TF_VAR_private_key_name: private_key.pem
-        run: terraform apply -auto-approve
+        working-directory: /home/runner/work/terraform/terraform
+        run: |
+         pwd
+         ls 
+         terraform apply -auto-approve
 
       # - name: Terraform destroy
       #   run: terraform destroy --auto-approve
