@@ -51,8 +51,8 @@ module "ec2_instance" {
   instance_type          = var.instance_type
   key_name               = "user1"
   monitoring             = true
-  vpc_security_group_ids = [module.vpc.default_security_group_id] # Use the output name
-  subnet_id              = module.vpc.public_subnet_ids[0]      # Access the first (or desired) public subnet ID from the list
+  #vpc_security_group_ids = [module.vpc.default_security_group_id] # Use the output name
+  subnet_id              = module.vpc.public_subnets[0].id      # Access the first (or desired) public subnet ID from the list
 
   tags = {
     Terraform   = "true"
