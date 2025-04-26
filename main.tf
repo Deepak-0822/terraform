@@ -62,7 +62,7 @@ module "ec2_instance" {
 }
 
 module "security_group" {
-  source = "./modules/security-group"
+  source = "${var.environment}-${var.project_name}-ec2-sg"
 
   name        = "user-service"
   vpc_id      = module.vpc.vpc_id
