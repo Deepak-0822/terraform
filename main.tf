@@ -60,7 +60,7 @@ module "ec2_instance" {
   }
 }
 
-output "public_subnet_id" {
-  description = "A list of IDs of the public subnets."
-  value       = module.vpc.aws_subnet.public[0].id # Assuming you named your public subnets 'public'
+output "public_subnets" {
+  description = "List of IDs of public subnets"
+  value       = module.vpc.aws_subnet.public[0].id
 }
