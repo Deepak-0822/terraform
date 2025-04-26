@@ -19,6 +19,11 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
 
+      - name: Create Private Key File
+        run: |
+          echo "${{ secrets.PRIVATE_KEY_PEM }}" > my-private-key.pem
+          chmod 600 my-private-key.pem
+
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
