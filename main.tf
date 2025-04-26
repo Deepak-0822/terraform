@@ -52,10 +52,15 @@ module "ec2_instance" {
   instance_type          = var.instance_type
   key_name               = "user1"
   #vpc_security_group_ids = [module.vpc.default_security_group_id] # Use the output name
-  subnet_id              = module.vpc.public_subnets[0].id  # Access the first (or desired) public subnet ID from the list
+  subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
     Terraform   = "true"
     Environment = "${var.environment}-${var.project_name}"
   }
+}
+
+output "public_subnets" {
+  description = "List of IDs of public subnets"
+  value       = module.vpc.public_subnets[0].id
 }
