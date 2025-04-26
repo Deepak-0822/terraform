@@ -42,3 +42,11 @@ variable "one_nat_gateway_per_az" {
   type        = bool
   default     = null
 }
+
+## ec2
+
+variable "instance_type" {
+  description = "The CIDR of the VPC"
+  type        = string
+  default     = null
+}

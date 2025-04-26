@@ -7,3 +7,4 @@ private_subnets                = ["10.4.1.0/24", "10.4.2.0/24"]
 public_subnets                 = ["10.4.3.0/24", "10.4.4.0/24"]
 single_nat_gateway             = true
 one_nat_gateway_per_az         = false
+instance_type                  = "t2.micro"
