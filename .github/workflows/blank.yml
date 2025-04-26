@@ -41,24 +41,24 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan        
-        env:
-          TF_VAR_private_key_name: private_key.pem
+      # - name: Terraform Plan        
+      #   env:
+      #     TF_VAR_private_key_name: private_key.pem
 
-        working-directory: /home/runner/work/terraform/terraform
-        run: |
-         pwd
-         ls  
-         terraform plan -out=tfplan
+      #   working-directory: /home/runner/work/terraform/terraform
+      #   run: |
+      #    pwd
+      #    ls  
+      #    terraform plan -out=tfplan
 
-      - name: Terraform Apply
-        env:
-          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-        working-directory: /home/runner/work/terraform/terraform
-        run: |
-         pwd
-         ls 
-         terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   env:
+      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+      #   working-directory: /home/runner/work/terraform/terraform
+      #   run: |
+      #    pwd
+      #    ls 
+      #    terraform apply -auto-approve
 
-      # - name: Terraform destroy
-      #   run: terraform destroy --auto-approve
+      - name: Terraform destroy
+        run: terraform destroy --auto-approve
