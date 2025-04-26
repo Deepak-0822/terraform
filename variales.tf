@@ -52,5 +52,4 @@ variable "instance_type" {
 }
 
 variable "private_key_name" {
-  type = string
 }

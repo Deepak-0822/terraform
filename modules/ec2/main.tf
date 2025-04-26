@@ -35,7 +35,7 @@ resource "aws_instance" "this" {
   subnet_id              = var.subnet_id
   vpc_security_group_ids = var.vpc_security_group_ids
 
-  key_name             = file(var.private_key_name)
+  key_name             = var.key_name
   monitoring           = var.monitoring
   get_password_data    = var.get_password_data
   iam_instance_profile = var.create_iam_instance_profile ? aws_iam_instance_profile.this[0].name : var.iam_instance_profile
