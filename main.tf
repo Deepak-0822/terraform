@@ -68,6 +68,8 @@ module "security_group" {
   vpc_id      = module.vpc.vpc_id
 
   ingress_rules            = ["all-tcp"]
+  ingress_cidr_blocks      = ["0.0.0.0/0"]
   egress_rules             = ["all-tcp"]
-  cidr_blocks = "0.0.0.0/0"
+  egress_cidr_blocks      = ["0.0.0.0/0"]
+
 }
