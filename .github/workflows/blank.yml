@@ -39,7 +39,10 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Plan
+      - name: Terraform Plan        
+        env:
+          TF_VAR_private_key_name: private_key.pem
+
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
