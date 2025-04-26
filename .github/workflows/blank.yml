@@ -20,10 +20,14 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
 
-      - name: Create Private Key File
+      - name: Generate Public Key
         run: |
-          echo "${{ secrets.PRIVATE_KEY_PEM }}" > my-private-key.pem
           chmod 600 my-private-key.pem
+          ssh-keygen -y -f my-private-key.pem > my-public-key.pub
+        
+      - name: Import EC2 Key Pair
+        run: |
+          aws ec2 import-key-pair --key-name my-private-key-pem --public-key-material "$(cat my-public-key.pub)" --region ${{ env.AWS_DEFAULT_REGION }}
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
