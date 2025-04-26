@@ -52,7 +52,7 @@ module "ec2_instance" {
   instance_type          = var.instance_type
   key_name               = "ec2-pem-key-mum"
   user_data = file("${path.module}/user_data.sh")
-  #vpc_security_group_ids = [module.vpc.default_security_group_id] # Use the output name
+  vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
   subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
@@ -61,12 +61,13 @@ module "ec2_instance" {
   }
 }
 
-module "security-group" {
+module "security_group" {
   source = "./modules/security-group"
 
   name        = "user-service"
   vpc_id      = module.vpc.vpc_id
 
-  ingress_rules            = ["all-all"]
-  egress_rules             = ["all-all"]
+  ingress_rules            = ["all-tcp"]
+  egress_rules             = ["all-tcp"]
+  cidr_blocks = "0.0.0.0/0"
 }
