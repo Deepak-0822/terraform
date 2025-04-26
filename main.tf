@@ -50,7 +50,7 @@ module "ec2_instance" {
   ami  = "ami-0e35ddab05955cf57"
   associate_public_ip_address = true
   instance_type          = var.instance_type
-  key_name               = "my-private-key-pem"
+  key_name               = var.private_key_name
   user_data = file("${path.module}/user_data.sh")
   #vpc_security_group_ids = [module.vpc.default_security_group_id] # Use the output name
   subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list

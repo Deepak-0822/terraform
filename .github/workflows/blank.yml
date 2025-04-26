@@ -1,7 +1,6 @@
 name: Terraform CI/CD
 
 on:
-  push:
   workflow_dispatch:
 
 jobs:
@@ -20,14 +19,13 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
 
-      - name: Generate Public Key
-        run: |
-          chmod 600 my-private-key.pem
-          ssh-keygen -y -f my-private-key.pem > my-public-key.pub
-        
-      - name: Import EC2 Key Pair
-        run: |
-          aws ec2 import-key-pair --key-name my-private-key-pem --public-key-material "$(cat my-public-key.pub)" --region ${{ env.AWS_DEFAULT_REGION }}
+      - name: Save EC2 Private Key
+        run:
+          echo "${{ secrets.EC2_PRIVATE_KEY }}"> private_key.pem
+          chmod 600 private_key.pem
+ 
+      - name: Move private key to working directory
+        run: mv private_key.pem ./ec2_instance/
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
@@ -44,6 +42,8 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform Apply
+        env:
+          TF_VAR_private_key_name: private_key.pem
         run: terraform apply -auto-approve
 
       # - name: Terraform destroy
