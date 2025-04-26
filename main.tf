@@ -44,18 +44,18 @@ resource "aws_eip" "nat" {
 
 #### Ec2
 module "ec2_instance" {
-  source  = "./modules/ec2"
+  source = "./modules/ec2"
 
   name = "${var.environment}-${var.project_name}-ec2"
 
   instance_type          = var.instance_type
   key_name               = "user1"
   monitoring             = true
-  vpc_security_group_ids = [module.vpc.aws_default_security_group[0]]
-  subnet_id              = module.vpc.aws_subnet.public[0].id
+  vpc_security_group_ids = [module.vpc.default_security_group_id] # Use the output name
+  subnet_id              = module.vpc.public_subnet_ids[0]      # Access the first (or desired) public subnet ID from the list
 
   tags = {
-    Terraform = "true"
+    Terraform   = "true"
     Environment = "${var.environment}-${var.project_name}"
   }
 }
