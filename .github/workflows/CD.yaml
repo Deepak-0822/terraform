@@ -35,9 +35,9 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Configure kubectl for EKS
-      run: |
-        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+    # - name: Configure kubectl for EKS
+    #   run: |
+    #     aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
 
     - name: Verify deployment template file exists
       run: |
@@ -57,6 +57,6 @@ jobs:
           exit 1
         fi
 
-    - name: Apply Kubernetes deployment
-      run: |
-        kubectl apply -f k8s/deployment-template.yaml
+    # - name: Apply Kubernetes deployment
+    #   run: |
+    #     kubectl apply -f k8s/deployment-template.yaml
