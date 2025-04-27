@@ -16,9 +16,9 @@ spec:
     spec:
       containers:
       - name: {{ .Values.serviceName }}
-        image: {{ .Values.image_uri }}
+        image: {{ .Values.imageuri }}
         ports:
-        - containerPort: {{ .Values.containerPort }}
+        - containerPort: {{ .Values.Port }}
  
 ---
  
@@ -32,5 +32,5 @@ spec:
   ports:
     - protocol: TCP
       port: {{ .Values.Port }}
-      targetPort: {{ .Values.containerPort }}
+      targetPort: {{ .Values.Port }}
   type: ClusterIP
