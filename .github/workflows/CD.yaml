@@ -1,0 +1,48 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: 'ap-south-2'  # Replace with your region
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'v1.21.0'  # Specify the kubectl version you need
+
+      - name: Get inputs for deployment
+        id: inputs
+        run: |
+          echo "SERVICE_NAME=${{ github.event.inputs.service_name }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.event.inputs.image_tag }}" >> $GITHUB_ENV
+          echo "PORT=${{ github.event.inputs.port }}" >> $GITHUB_ENV
+
+      - name: Update Kubernetes deployment template
+        run: |
+          sed -i "s|image: <IMAGE_NAME>|image: ${{ env.IMAGE_TAG }}|" k8s/deployment.yaml
+          sed -i "s|<SERVICE_NAME>|${{ env.SERVICE_NAME }}|" k8s/deployment.yaml
+          sed -i "s|<PORT>|${{ env.PORT }}|" k8s/deployment.yaml
+
+      - name: Deploy to AWS EKS
+        run: |
+          aws eks --region ap-south-2 update-kubeconfig --name my-cluster  # Replace with your cluster name
+          kubectl apply -f k8s/deployment.yaml
+
+      - name: Verify deployment
+        run: |
+          kubectl get pods -l app=${{ env.SERVICE_NAME }} -o wide
