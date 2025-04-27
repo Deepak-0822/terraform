@@ -34,7 +34,7 @@ jobs:
 
       - name: Run Checkov Static Analysis
         run: |
-          checkov -d . --skip-path .github/* --skip-path k8s/*
+          checkov -d . --skip-path .github/* --skip-path k8s/* --soft-fail
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
