@@ -7,7 +7,7 @@ on:
         description: 'Docker image URI'
         required: true
         type: string
-      servicename:
+      service_name:
         description: 'Service name to deploy'
         required: true
         type: string
@@ -35,18 +35,28 @@ jobs:
       with:
         version: 'latest'
 
-    # - name: Configure kubectl for EKS
-    #   run: |
-    #     aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name test-eks
+    - name: Configure kubectl for EKS
+      run: |
+        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+
+    - name: Verify deployment template file exists
+      run: |
+        ls -l k8s/deployment-template.yaml || echo "File not found!"
 
     - name: Update deployment template with image URI and port
       run: |
-        # Update the deployment YAML file with the provided image URI and port
-        sed -i "s|<image-uri>|${{ github.event.inputs.image_uri }}|g" k8s/deployment-template.yaml
-        sed -i "s|<service-name>|${{ github.event.inputs.servicename }}|g" k8s/deployment-template.yaml
-        sed -i "s|<port>|${{ github.event.inputs.port }}|g" k8s/deployment-template.yaml
-        cat deployment-template.yaml
+        # Ensure the file exists before modifying it
+        if [ -f "k8s/deployment-template.yaml" ]; then
+          echo "Updating deployment template..."
+          sed -i "s|<image-uri>|${{ github.event.inputs.image_uri }}|g" k8s/deployment-template.yaml
+          sed -i "s|<service-name>|${{ github.event.inputs.service_name }}|g" k8s/deployment-template.yaml
+          sed -i "s|<port>|${{ github.event.inputs.port }}|g" k8s/deployment-template.yaml
+          cat k8s/deployment-template.yaml
+        else
+          echo "Deployment template not found. Exiting."
+          exit 1
+        fi
 
-    # - name: Apply Kubernetes deployment
-    #   run: |
-    #     kubectl apply -f k8s/deployment-template.yaml
+    - name: Apply Kubernetes deployment
+      run: |
+        kubectl apply -f k8s/deployment-template.yaml
