@@ -1,62 +1,36 @@
-name: Deploy to AWS EKS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <servicename>
+  labels:
+    app: <servicename>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: <servicename>
+  template:
+    metadata:
+      labels:
+        app: <servicename>
+    spec:
+      containers:
+      - name: <servicename>
+        image: <imageuri>
+        ports:
+        - containerPort: <port>
 
-on:
-  workflow_dispatch:
-    inputs:
-      image_uri:
-        description: 'Docker image URI'
-        required: true
-        type: string
-      service_name:
-        description: 'Service name to deploy'
-        required: true
-        type: string
-      port:
-        description: 'Port for the service'
-        required: true
-        type: string
+---
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up AWS CLI
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_REGION }}
-
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v1
-      with:
-        version: 'latest'
-
-    - name: Configure kubectl for EKS
-      run: |
-        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
-
-    - name: Verify deployment template file exists
-      run: |
-        ls -l k8s/deployment-template.yaml || echo "File not found!"
-
-    - name: Update deployment template with image URI and port
-      run: |
-        # Ensure the file exists before modifying it
-        if [ -f "k8s/deployment-template.yaml" ]; then
-          echo "Updating deployment template..."
-          sed -i "s|<imageuri>|${{ github.event.inputs.image_uri }}|g" k8s/deployment-template.yaml
-          sed -i "s|<servicename>|${{ github.event.inputs.service_name }}|g" k8s/deployment-template.yaml
-          sed -i "s|<port>|${{ github.event.inputs.port }}|g" k8s/deployment-template.yaml
-          cat k8s/deployment-template.yaml
-        else
-          echo "Deployment template not found. Exiting."
-          exit 1
-        fi
-
-    - name: Apply Kubernetes deployment
-      run: |
-        kubectl apply -f k8s/deployment-template.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: <servicename>
+spec:
+  selector:
+    app: <servicename>
+  ports:
+    - protocol: TCP
+      port: <port>
+      targetPort: <port>
+  type: ClusterIP
