@@ -7,7 +7,7 @@ on:
         description: 'Docker image URI'
         required: true
         type: string
-      service_name:
+      servicename:
         description: 'Service name to deploy'
         required: true
         type: string
@@ -37,15 +37,16 @@ jobs:
 
     - name: Configure kubectl for EKS
       run: |
-        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
+        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name test-eks
 
     - name: Update deployment template with image URI and port
       run: |
         # Update the deployment YAML file with the provided image URI and port
         sed -i "s|<image-uri>|${{ github.event.inputs.image_uri }}|g" k8s/deployment-template.yaml
-        sed -i "s|<service-name>|${{ github.event.inputs.service_name }}|g" k8s/deployment-template.yaml
+        sed -i "s|<service-name>|${{ github.event.inputs.servicename }}|g" k8s/deployment-template.yaml
         sed -i "s|<port>|${{ github.event.inputs.port }}|g" k8s/deployment-template.yaml
+        cat deployment-template.yaml
 
-    - name: Apply Kubernetes deployment
-      run: |
-        kubectl apply -f k8s/deployment-template.yaml
+    # - name: Apply Kubernetes deployment
+    #   run: |
+    #     kubectl apply -f k8s/deployment-template.yaml
