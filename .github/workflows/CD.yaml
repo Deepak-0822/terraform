@@ -35,9 +35,9 @@ jobs:
       with:
         version: 'latest'
 
-    - name: Configure kubectl for EKS
-      run: |
-        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name test-eks
+    # - name: Configure kubectl for EKS
+    #   run: |
+    #     aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name test-eks
 
     - name: Update deployment template with image URI and port
       run: |
