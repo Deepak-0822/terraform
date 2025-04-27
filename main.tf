@@ -77,8 +77,6 @@ module "security_group" {
 resource "aws_iam_role" "test_role" {
   name = "ec2-role-import" # It's good practice to have descriptive names
 
-  # Terraform's "jsonencode" function converts a
-  # Terraform expression result to valid JSON syntax.
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
