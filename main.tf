@@ -62,9 +62,9 @@ module "ec2_instance" {
 }
 
 module "security_group" {
-  source = "${var.environment}-${var.project_name}-ec2-sg"
+  source = "./modules/security_group"
 
-  name        = "user-service"
+  name        = "${var.environment}-${var.project_name}-ec2-sg"
   vpc_id      = module.vpc.vpc_id
 
   ingress_rules            = ["all-tcp"]
