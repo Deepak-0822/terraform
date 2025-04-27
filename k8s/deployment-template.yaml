@@ -33,4 +33,4 @@ spec:
     - protocol: TCP
       port: <port>
       targetPort: <port>
-  type: ClusterIP
+  type: NodePort
