@@ -1,48 +1,51 @@
-name: Deploy to EKS
+name: Deploy to AWS EKS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      image_uri:
+        description: 'Docker image URI'
+        required: true
+        type: string
+      service_name:
+        description: 'Service name to deploy'
+        required: true
+        type: string
+      port:
+        description: 'Port for the service'
+        required: true
+        type: string
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up AWS CLI
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: 'ap-south-2'  # Replace with your region
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
-        with:
-          version: 'v1.21.0'  # Specify the kubectl version you need
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v1
+      with:
+        version: 'latest'
 
-      - name: Get inputs for deployment
-        id: inputs
-        run: |
-          echo "SERVICE_NAME=${{ github.event.inputs.service_name }}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=${{ github.event.inputs.image_tag }}" >> $GITHUB_ENV
-          echo "PORT=${{ github.event.inputs.port }}" >> $GITHUB_ENV
+    - name: Configure kubectl for EKS
+      run: |
+        aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }}
 
-      - name: Update Kubernetes deployment template
-        run: |
-          sed -i "s|image: <IMAGE_NAME>|image: ${{ env.IMAGE_TAG }}|" k8s/deployment.yaml
-          sed -i "s|<SERVICE_NAME>|${{ env.SERVICE_NAME }}|" k8s/deployment.yaml
-          sed -i "s|<PORT>|${{ env.PORT }}|" k8s/deployment.yaml
+    - name: Update deployment template with image URI and port
+      run: |
+        # Update the deployment YAML file with the provided image URI and port
+        sed -i "s|<image-uri>|${{ github.event.inputs.image_uri }}|g" k8s/deployment-template.yaml
+        sed -i "s|<service-name>|${{ github.event.inputs.service_name }}|g" k8s/deployment-template.yaml
+        sed -i "s|<port>|${{ github.event.inputs.port }}|g" k8s/deployment-template.yaml
 
-      - name: Deploy to AWS EKS
-        run: |
-          aws eks --region ap-south-2 update-kubeconfig --name my-cluster  # Replace with your cluster name
-          kubectl apply -f k8s/deployment.yaml
-
-      - name: Verify deployment
-        run: |
-          kubectl get pods -l app=${{ env.SERVICE_NAME }} -o wide
+    - name: Apply Kubernetes deployment
+      run: |
+        kubectl apply -f k8s/deployment-template.yaml
