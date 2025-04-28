@@ -90,3 +90,16 @@ jobs:
 
       # - name: Terraform destroy
       #   run: terraform destroy --auto-approve
+
+
+
+
+# terraform {
+#   backend "remote" {
+#     organization = "Org-new"
+    
+#     workspaces {
+#       name = "terraform"
+#     }
+#   }
+# }
