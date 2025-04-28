@@ -42,7 +42,7 @@ jobs:
 
       - name: Terraform Init
         env:
-          TFE_TOKEN: ${{ secrets.TFC_TOKEN }}
+          TFC_TOKEN: ${{ secrets.TFE_TOKEN }}
         run: terraform init
 
       # - name: Terraform Validate
@@ -51,7 +51,7 @@ jobs:
       - name: Terraform Plan        
         env:
           TF_VAR_private_key_name: private_key.pem
-          TFE_TOKEN: ${{ secrets.TFC_TOKEN }}
+          TFC_TOKEN: ${{ secrets.TFE_TOKEN }}
         working-directory: /home/runner/work/terraform/terraform
         run: |  
          terraform plan
