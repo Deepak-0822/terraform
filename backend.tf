@@ -10,7 +10,7 @@
 
 terraform {
   backend "remote" {
-    organization = Org-new
+    organization = "Org-new"
     
     workspaces {
       name = "terraform"
