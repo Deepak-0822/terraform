@@ -41,17 +41,20 @@ jobs:
           terraform_version: 1.10.5
 
       - name: Terraform Init
+        env:
+          TFE_TOKEN: ${{ secrets.TFC_TOKEN }}
         run: terraform init
 
       # - name: Terraform Validate
       #   run: terraform validate
 
-      # - name: Terraform Plan        
-      #   env:
-      #     TF_VAR_private_key_name: private_key.pem
-      #   working-directory: /home/runner/work/terraform/terraform
-      #   run: |  
-      #    terraform plan
+      - name: Terraform Plan        
+        env:
+          TF_VAR_private_key_name: private_key.pem
+          TFE_TOKEN: ${{ secrets.TFC_TOKEN }}
+        working-directory: /home/runner/work/terraform/terraform
+        run: |  
+         terraform plan
 
       # - name: Terraform Apply
       #   env:
@@ -68,5 +71,5 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      - name: Terraform destroy
-        run: terraform destroy --auto-approve
+      # - name: Terraform destroy
+      #   run: terraform destroy --auto-approve
