@@ -12,13 +12,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: ap-south-1
-
       - name: Save EC2 Private Key
         run: |
           echo "${{ secrets.EC2_PRIVATE_KEY }}"> private_key.pem
@@ -40,18 +33,28 @@ jobs:
         with:
           terraform_version: 1.10.5
 
-      # - name: Configure Terraform Credentials
-      #   run: |
-      #     mkdir -p ~/.terraform.d
-      #     cat > ~/.terraform.d/credentials.tfrc.json <<EOF
-      #     {
-      #       "credentials": {
-      #         "app.terraform.io": {
-      #           "token": "${{ secrets.TFE_TOKEN }}"
-      #         }
-      #       }
-      #     }
-      #     EOF
+      - name: Configure Terraform Credentials
+        run: |
+          mkdir -p ~/.terraform.d
+          cat > ~/.terraform.d/credentials.tfrc.json <<EOF
+          {
+            "credentials": {
+              "app.terraform.io": {
+                "token": "${{ secrets.TFE_TOKEN }}"
+                aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+                aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+                aws-region: ap-south-1
+              }
+            }
+          }
+          EOF
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          aws-region: ap-south-1
       
       - name: Terraform Init
         run: terraform init
