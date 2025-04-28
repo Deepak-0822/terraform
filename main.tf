@@ -102,4 +102,3 @@ resource "aws_iam_role" "test_role" {
   }
 }
 
-## aws_iam_role.test_role ec2-role-import
