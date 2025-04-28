@@ -40,18 +40,18 @@ jobs:
         with:
           terraform_version: 1.10.5
 
-      - name: Configure Terraform Credentials
-        run: |
-          mkdir -p ~/.terraform.d
-          cat > ~/.terraform.d/credentials.tfrc.json <<EOF
-          {
-            "credentials": {
-              "app.terraform.io": {
-                "token": "${{ secrets.TFE_TOKEN }}"
-              }
-            }
-          }
-          EOF
+      # - name: Configure Terraform Credentials
+      #   run: |
+      #     mkdir -p ~/.terraform.d
+      #     cat > ~/.terraform.d/credentials.tfrc.json <<EOF
+      #     {
+      #       "credentials": {
+      #         "app.terraform.io": {
+      #           "token": "${{ secrets.TFE_TOKEN }}"
+      #         }
+      #       }
+      #     }
+      #     EOF
       
       - name: Terraform Init
         run: terraform init
