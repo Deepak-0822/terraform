@@ -48,15 +48,14 @@ jobs:
             "credentials": {
               "app.terraform.io": {
                 "token": "${{ secrets.TFE_TOKEN }}"
-                aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-                aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-                aws-region: ap-south-1
               }
             }
           }
           EOF
 
       - name: Terraform Init
+        env:
+          TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
         run: |
           terraform init
 
@@ -91,8 +90,7 @@ jobs:
 
 
 
-        # env:
-        #   TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
+
 
 #         terraform {
 #  backend "s3" {
