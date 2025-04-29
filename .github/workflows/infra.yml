@@ -76,15 +76,15 @@ jobs:
           TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
         working-directory: /home/runner/work/terraform/terraform
         run: |
-        #  export TF_LOG=DEBUG
-        #  export TF_LOG_PATH=log.txt 
+         export TF_LOG=DEBUG
+         export TF_LOG_PATH=log.txt 
          terraform apply -auto-approve
 
-      # - name: Upload Terraform logs
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: terraform-logs
-      #     path: ./log.txt
+      - name: Upload Terraform logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-logs
+          path: ./log.txt
 
       # - name: Terraform destroy
       #   run: terraform destroy --auto-approve
