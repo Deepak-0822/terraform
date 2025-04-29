@@ -19,35 +19,19 @@ jobs:
           ls
           chmod 600 private_key.pem
 
-      # - name: Install Checkov
-      #   run: |
-      #     python -m pip install --upgrade pip
-      #     pip install checkov
+      - name: Install Checkov
+        run: |
+          python -m pip install --upgrade pip
+          pip install checkov
 
-      # - name: Run Checkov Static Analysis
-      #   run: |
-      #     checkov -d . --skip-path .github/* --skip-path k8s/* --soft-fail
+      - name: Run Checkov Static Analysis
+        run: |
+          checkov -d . --skip-path .github/* --skip-path k8s/* --soft-fail
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.10.5
-
-      - name: Configure Terraform Credentials
-        run: |
-          mkdir -p ~/.terraform.d
-          cat > ~/.terraform.d/credentials.tfrc.json <<EOF
-          {
-            "credentials": {
-              "app.terraform.io": {
-                "token": "${{ secrets.TFE_TOKEN }}"
-                aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
-                aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-                aws-region: ap-south-1
-              }
-            }
-          }
-          EOF
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -59,15 +43,12 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      # - name: Terraform Init
-      #   env:
-      #     TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
-      #   run: |
-      #     terraform login
-      #     terraform init
+      - name: Terraform Init
+        run: |
+          terraform init
 
-      # - name: Terraform Validate
-      #   run: terraform validate
+      - name: Terraform Validate
+        run: terraform validate
 
       - name: Terraform Plan        
         env:
@@ -76,20 +57,20 @@ jobs:
         run: |  
          terraform plan
 
-      # - name: Terraform Apply
-      #   env:
-      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-      #   working-directory: /home/runner/work/terraform/terraform
-      #   run: |
-      #    export TF_LOG=DEBUG
-      #    export TF_LOG_PATH=log.txt 
-      #    terraform apply -auto-approve
+      - name: Terraform Apply
+        env:
+          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+        working-directory: /home/runner/work/terraform/terraform
+        run: |
+         export TF_LOG=DEBUG
+         export TF_LOG_PATH=log.txt 
+         terraform apply -auto-approve
 
-      # - name: Upload Terraform logs
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: terraform-logs
-      #     path: ./log.txt
+      - name: Upload Terraform logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-logs
+          path: ./log.txt
 
       # - name: Terraform destroy
       #   run: terraform destroy --auto-approve
@@ -97,12 +78,33 @@ jobs:
 
 
 
-# terraform {
-#  backend "s3" {
-#    bucket       = "demo-tfstate-testing"
-#    key          = "path/to/state"
-#    region       = "ap-south-1"
-#    use_lockfile = true
-#    encrypt = true 
-#  }
+
+
+      # - name: Configure Terraform Credentials
+      #   run: |
+      #     mkdir -p ~/.terraform.d
+      #     cat > ~/.terraform.d/credentials.tfrc.json <<EOF
+      #     {
+      #       "credentials": {
+      #         "app.terraform.io": {
+      #           "token": "${{ secrets.TFE_TOKEN }}"
+      #           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+      #           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+      #           aws-region: ap-south-1
+      #         }
+      #       }
+      #     }
+      #     EOF
+
+#       terraform {
+#   backend "remote" {
+#     organization = "Org-new"
+    
+#     workspaces {
+#       name = "terraform"
+#     }
+#   }
 # }
+
+        # env:
+        #   TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
