@@ -5,7 +5,7 @@ locals {
   max_subnet_length = max(
     local.len_public_subnets
   )
-    # Use `local.vpc_id` to give a hint to Terraform that subnets should be deleted before secondary CIDR blocks can be free!
+
   vpc_id = try( aws_vpc.this[0].id, "")
 
   create_vpc = var.create_vpc
@@ -103,3 +103,30 @@ resource "aws_route" "public_internet_gateway" {
   }
 }
 
+################################################################################
+# Internet Gateway
+################################################################################
+
+resource "aws_internet_gateway" "this" {
+  count = local.create_public_subnets && var.create_igw ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    { "Name" = var.name },
+    var.tags,
+    var.igw_tags,
+  )
+}
+
+resource "aws_egress_only_internet_gateway" "this" {
+  count = local.create_vpc && var.create_egress_only_igw && local.max_subnet_length > 0 ? 1 : 0
+
+  vpc_id = local.vpc_id
+
+  tags = merge(
+    { "Name" = var.name },
+    var.tags,
+    var.igw_tags,
+  )
+}
