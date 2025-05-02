@@ -12,12 +12,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Save EC2 Private Key
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}"> private_key.pem
-          pwd
-          ls
-          chmod 600 private_key.pem
+      # - name: Save EC2 Private Key
+      #   run: |
+      #     echo "${{ secrets.EC2_PRIVATE_KEY }}"> private_key.pem
+      #     pwd
+      #     ls
+      #     chmod 600 private_key.pem
 
       # - name: Install Checkov
       #   run: |
@@ -39,52 +39,29 @@ jobs:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
-      
-      - name: Configure Terraform Credentials
-        run: |
-          mkdir -p ~/.terraform.d
-          cat > ~/.terraform.d/credentials.tfrc.json <<EOF
-          {
-            "credentials": {
-              "app.terraform.io": {
-                "token": "${{ secrets.TFE_TOKEN }}"
-              }
-            }
-          }
-          EOF
 
       - name: Terraform Init
-        env:
-          TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
-        run: |
-          terraform init
+        run:  terraform init
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan        
-        env:
-          TF_VAR_private_key_name: private_key.pem
-          TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
-        working-directory: /home/runner/work/terraform/terraform
         run: |  
          terraform plan
 
-      - name: Terraform Apply
-        env:
-          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-          TFE_TOKEN: ${{ secrets.TFE_TOKEN }}
-        working-directory: /home/runner/work/terraform/terraform
-        run: |
-         export TF_LOG=DEBUG
-         export TF_LOG_PATH=log.txt 
-         terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   env:
+      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+      #   working-directory: /home/runner/work/terraform/terraform
+      #   run: |
+      #    terraform apply -auto-approve
 
-      - name: Upload Terraform logs
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-logs
-          path: ./log.txt
+      # - name: Upload Terraform logs
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: terraform-logs
+      #     path: ./log.txt
 
       # - name: Terraform destroy
       #   run: terraform destroy --auto-approve
