@@ -16,7 +16,7 @@ module "vpc2" {
   source = "./modules/vpc"
 
   name = "${var.environment}-${var.project_name}-vpc2"
-  cidr = 10.2.2.2/23
+  cidr = "10.2.2.2/23"
 
   enable_dns_hostnames       = true
 
