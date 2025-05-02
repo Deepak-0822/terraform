@@ -16,24 +16,6 @@ module "vpc" {
 }
 
 #### Ec2
-module "ec2_instance_home" {
-  source = "./modules/ec2"
-
-  name = "${var.environment}-${var.project_name}-ec2-home"
-  ami  = "ami-0e35ddab05955cf57"
-  associate_public_ip_address = true
-  instance_type          = var.instance_type
-  key_name               = "ec2-pem-key-mum"
-  user_data = file("${path.module}/user_data.sh")
-  #vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
-  subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
-
-  tags = {
-    Terraform   = "true"
-    Environment = "${var.environment}-${var.project_name}"
-  }
-}
-
 module "ec2_instance_image" {
   source = "./modules/ec2"
 

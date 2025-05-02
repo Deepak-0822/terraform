@@ -1,13 +1,11 @@
 #!/bin/bash
-# Update packages
-apt-get update -y
- 
-# Install Apache
-apt-get install -y apache2
- 
-# Start Apache and enable it at boot
-systemctl start apache2
-systemctl enable apache2
- 
-# Create a simple homepage
-echo "<h1>Welcome to your Apache Server!</h1>" > /var/www/html/index.html
+apt-get update
+apt-get install -y nginx
+
+systemctl start nginx
+systemctl enable nginx
+
+sudo mkdir -p /usr/share/nginx/html/images
+echo "<h1>Images served from Instance B</h1><img src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' alt='dummy'>" > /usr/share/nginx/html/images/index.html
+
+sudo tee /etc/nginx/sites-available/images.conf

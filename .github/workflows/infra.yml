@@ -51,9 +51,9 @@ jobs:
         run: |  
          terraform plan
 
-      # - name: Terraform Apply
-      #   run: |
-      #    terraform apply -auto-approve
+      - name: Terraform Apply
+        run: |
+         terraform apply -auto-approve
 
       # - name: Upload Terraform logs
       #   uses: actions/upload-artifact@v4
