@@ -1,5 +1,11 @@
 locals {
 
+  len_public_subnets      = max(length(var.public_subnets))
+
+  max_subnet_length = max(
+    local.len_private_subnets,
+    local.len_public_subnets,
+  )
   create_vpc = var.create_vpc
 }
 
