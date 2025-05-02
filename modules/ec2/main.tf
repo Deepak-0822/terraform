@@ -1,5 +1,6 @@
 locals {
-  create = var.create
+ create = var.create ? 1 : 0
+
 
   is_t_instance_type = replace(var.instance_type, "/^t(2|3|3a|4g){1}\\..*$/", "1") == "1" ? true : false
 }
