@@ -1,5 +1,3 @@
-data "aws_partition" "current" {}
-
 locals {
   create = var.create == null ? 1 : 0
 
