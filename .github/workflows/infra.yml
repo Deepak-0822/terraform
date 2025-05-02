@@ -1,6 +1,7 @@
 name: Terraform Infra Setup 
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
