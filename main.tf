@@ -16,7 +16,7 @@ module "vpc" {
 }
 
 #### Ec2
-module "ec2_instance" {
+module "ec2_instance_home" {
   source = "./modules/ec2"
 
   name = "${var.environment}-${var.project_name}-ec2-home"
@@ -34,7 +34,7 @@ module "ec2_instance" {
   }
 }
 
-module "ec2_instance" {
+module "ec2_instance_image" {
   source = "./modules/ec2"
 
   name = "${var.environment}-${var.project_name}-ec2-image"
