@@ -33,3 +33,82 @@ module "ec2_instance_image" {
     Environment = "${var.environment}-${var.project_name}"
   }
 }
+
+module "ec2_instance_register" {
+  source = "./modules/ec2"
+
+  name = "${var.environment}-${var.project_name}-ec2-register"
+  ami  = "ami-0e35ddab05955cf57"
+  associate_public_ip_address = true
+  instance_type          = var.instance_type
+  key_name               = "ec2-pem-key-mum"
+  user_data = file("${path.module}/user_data.sh")
+  #vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
+  subnet_id              = module.vpc.public_subnets[2]  # Access the first (or desired) public subnet ID from the list
+
+  tags = {
+    Terraform   = "true"
+    Environment = "${var.environment}-${var.project_name}"
+  }
+}
+
+### ALB
+
+module "alb" {
+  source = "./modules/alb"
+
+  name    = "${var.environment}-${var.project_name}-alb"
+  vpc_id  = module.vpc.aws_vpc.this[0].id
+  subnets = [module.vpc.public_subnets[*]]
+
+  # Security Group
+  security_group_ingress_rules = {
+    all_http = {
+      from_port   = 80
+      to_port     = 80
+      ip_protocol = "tcp"
+      description = "HTTP web traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+    all_https = {
+      from_port   = 443
+      to_port     = 443
+      ip_protocol = "tcp"
+      description = "HTTPS web traffic"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+  security_group_egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "10.0.0.0/16"
+    }
+  }
+
+  listeners = {
+    http-htts = {
+      port     = 80
+      protocol = "HTTP"
+      redirect = {
+        port        = "443"
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
+    }
+  }
+
+  target_groups = {
+    ex-instance = {
+      name_prefix      = "h1"
+      protocol         = "HTTP"
+      port             = 80
+      target_type      = "instance"
+      target_id        = module.ec2_instance_image.aws_instance.this[0].id
+    }
+  }
+
+  tags = {
+    Environment = "Development"
+    Project     = "Example"
+  }
+}
