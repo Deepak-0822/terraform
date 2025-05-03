@@ -58,7 +58,7 @@ module "alb" {
   source = "./modules/alb"
 
   name    = "${var.environment}-${var.project_name}-alb"
-  vpc_id  = module.vpc.aws_vpc.this[0].id
+  vpc_id  = module.vpc.vpc_id
   subnets = [module.vpc.public_subnets[*]]
 
   # Security Group
@@ -103,7 +103,7 @@ module "alb" {
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
-      target_id        = module.ec2_instance_image.aws_instance.this[0].id
+      target_id        = module.ec2_instance_image.id
     }
   }
 
