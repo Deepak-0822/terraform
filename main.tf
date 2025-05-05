@@ -107,6 +107,7 @@ module "alb" {
       protocol    = "HTTP"
       port        = 80
       target_type = "instance"
+      path        = /images 
       target_id   =  module.ec2_instance_image.id
     }
     register-instance = {
