@@ -43,7 +43,6 @@ module "ec2_instance_register" {
   instance_type          = var.instance_type
   key_name               = "ec2-key"
   user_data = file("${path.module}/user_data.sh")
-  #vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
   subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
@@ -52,6 +51,22 @@ module "ec2_instance_register" {
   }
 }
 
+module "ec2_instance_default" {
+  source = "./modules/ec2"
+
+  name = "${var.environment}-${var.project_name}-ec2-image"
+  ami  = "ami-0e35ddab05955cf57"
+  associate_public_ip_address = true
+  instance_type          = var.instance_type
+  key_name               = "ec2-key"
+  user_data = file("${path.module}/user_data.sh")
+  subnet_id              = module.vpc.public_subnets[2]  # Access the first (or desired) public subnet ID from the list
+
+  tags = {
+    Terraform   = "true"
+    Environment = "${var.environment}-${var.project_name}"
+  }
+}
 ### ALB
 
 module "alb" {
@@ -99,6 +114,22 @@ module "alb" {
         target_group_key = "image-instance"
       }
     }
+    register-http = {
+      port            = 80
+      protocol        = "HTTP"
+      
+      forward = {
+        target_group_key = "register-instance"
+      }
+    }
+     default-http = {
+      port            = 80
+      protocol        = "HTTP"
+      
+      forward = {
+        target_group_key = " default-instance"
+      }
+    }
   }
  
   target_groups = {
@@ -115,6 +146,14 @@ module "alb" {
       port        = 80
       target_type = "instance"
       target_id   =  module.ec2_instance_register.id
+    }
+
+    default-instance = {
+      name_prefix = "h1"
+      protocol    = "HTTP"
+      port        = 80
+      target_type = "instance"
+      target_id   =  module.ec2_instance_default.id
     }
   }
  
