@@ -56,11 +56,15 @@ module "ec2_instance_register" {
 
 module "alb" {
   source = "./modules/alb"
-
+ 
   name    = "${var.environment}-${var.project_name}-alb"
   vpc_id  = module.vpc.vpc_id
-  subnets = [module.vpc.public_subnets[0], module.vpc.public_subnets[1], module.vpc.public_subnets[2]]
-
+  subnets = [
+    module.vpc.public_subnets[0],
+    module.vpc.public_subnets[1],
+    module.vpc.public_subnets[2]
+  ]
+ 
   # Security Group
   security_group_ingress_rules = {
     all_http = {
@@ -78,13 +82,14 @@ module "alb" {
       cidr_ipv4   = "0.0.0.0/0"
     }
   }
+ 
   security_group_egress_rules = {
     all = {
       ip_protocol = "-1"
       cidr_ipv4   = "10.0.0.0/16"
     }
   }
-
+ 
   listeners = {
     http-htts = {
       port     = 80
@@ -96,25 +101,27 @@ module "alb" {
       }
     }
   }
-
+ 
   target_groups = {
     ex-instance = {
-      name_prefix      = "h1"
-      protocol         = "HTTP"
-      port             = 80
-      target_type      = "instance"
-      target_id        = module.ec2_instance_image.id
+      name_prefix = "h1"
+      protocol    = "HTTP"
+      port        = 80
+      target_type = "instance"
+      target_id   = [
+        module.ec2_instance_image.id,
+        module.ec2_instance_register.id
+      ]
     }
   }
-
+ 
   tags = {
-    Environment = "Development"
-    Project     = "Example"
+    Environment = "${var.environment}"
+    Project     = "${var.project_name}"
   }
-
+ 
   depends_on = [
     module.ec2_instance_image,
     module.ec2_instance_register
   ]
-
 }
