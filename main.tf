@@ -150,7 +150,4 @@ module "alb" {
     module.ec2_instance_image,
     module.ec2_instance_register
   ]
-  lifecycle {
-    ignore_changes = true
-  }
 }
