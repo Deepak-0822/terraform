@@ -127,7 +127,7 @@ module "alb" {
       protocol        = "HTTP"
       
       forward = {
-        target_group_key = " default-instance"
+        target_group_key = "default-instance"
       }
     }
   }
