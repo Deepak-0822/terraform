@@ -111,4 +111,10 @@ module "alb" {
     Environment = "Development"
     Project     = "Example"
   }
+
+  depends_on = [
+    module.ec2_instance_image,
+    module.ec2_instance_register
+  ]
+
 }
