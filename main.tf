@@ -107,7 +107,7 @@ module "alb" {
  
   listeners = {
     image-http = {
-      port            = 80
+      port            = 81
       protocol        = "HTTP"
       
       forward = {
@@ -115,7 +115,7 @@ module "alb" {
       }
     }
     register-http = {
-      port            = 80
+      port            = 82
       protocol        = "HTTP"
       
       forward = {
