@@ -1,21 +1,21 @@
 #!/bin/bash
-# Update and install nginx
+# Update and install NGINX
 apt update -y
 apt install nginx -y
  
 # Create custom directory for /register path
 mkdir -p /var/www/html/register
  
-# Add a simple HTML page for /register
+# Create a simple HTML "Hello from NGINX" page
 cat <<EOF > /var/www/html/register/index.html
 <!DOCTYPE html>
 <html>
-<head><title>Register</title></head>
+<head><title>Hello</title></head>
 <body>
-<h1>Hello from /register!</h1>
+<h1>Hello from NGINX /register path!</h1>
 </body>
 </html>
 EOF
  
-# Restart nginx
+# Restart nginx to apply changes
 systemctl restart nginx
