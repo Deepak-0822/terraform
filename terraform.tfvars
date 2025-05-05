@@ -9,4 +9,4 @@ single_nat_gateway             = true
 one_nat_gateway_per_az         = false
 instance_type                  = "t2.micro"
 db_instance_type               = "db.t3.micro"
-db_password                    = "admin@123"
+db_password                    = "admin123"
