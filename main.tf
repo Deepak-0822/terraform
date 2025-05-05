@@ -91,24 +91,30 @@ module "alb" {
   }
  
   listeners = {
-    http-htts = {
-      port     = 80
-      protocol = "HTTP"
-      redirect = {
-        port        = "443"
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
+    image-http = {
+      port            = 80
+      protocol        = "HTTP"
+      
+      forward = {
+        target_group_key = "image-instance"
       }
     }
   }
  
   target_groups = {
-    ex-instance = {
+    image-instance = {
       name_prefix = "h1"
       protocol    = "HTTP"
       port        = 80
       target_type = "instance"
       target_id   =  module.ec2_instance_image.id
+    }
+    register-instance = {
+      name_prefix = "h1"
+      protocol    = "HTTP"
+      port        = 80
+      target_type = "instance"
+      target_id   =  module.ec2_instance_register.id
     }
   }
  
