@@ -50,3 +50,15 @@ variable "instance_type" {
   type        = string
   default     = null
 }
+
+variable "db_instance_type" {
+  description = "The CIDR of the VPC"
+  type        = string
+  default     = null
+}
+
+variable "db_password" {
+  description = "The CIDR of the VPC"
+  type        = string
+  default     = null
+}
