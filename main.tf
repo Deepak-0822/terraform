@@ -113,22 +113,6 @@ module "alb" {
         forward = {
           target_group_key = "image-instance"
         }
-      },
-      register-http = {
-        port            = 80
-        protocol        = "HTTP"
-        
-        forward = {
-          target_group_key = "register-instance"
-        }
-      },
-      default-http = {
-        port            = 80
-        protocol        = "HTTP"
-        
-        forward = {
-          target_group_key = " default-instance"
-        }
       }
     }
  
