@@ -105,115 +105,55 @@ module "alb" {
     }
   }
  
-  listeners = {
-    http = {
-      port     = 80
-      protocol = "HTTP"
-
-      rules = {
-        aivolvex-cp-rule = {
-          priority = 1
-          actions = [{
-            type = "weighted-forward"
-            target_groups = [
-              {
-                target_group_key = "register-instance"
-                weight           = 1 # Adjust weights as needed
-              }
-            ]
-            stickiness = {
-              enabled  = true
-              duration = 3600
-            }
-          }]
-          conditions = [
-            # Define conditions for this rule (e.g., path-based)
-            # {
-            #   field  = "path-pattern"
-            #   values = ["/register*"]
-            # }
-          ]
-        },
-        aivolvex-feature-rule = {
-          priority = 2
-          actions = [{
-            type = "weighted-forward"
-            target_groups = [
-              {
-                target_group_key = "default-instance"
-                weight           = 1 # Adjust weights as needed
-              }
-            ]
-            stickiness = {
-              enabled  = true
-              duration = 3600
-            }
-          }]
-          conditions = [
-            # Define conditions for this rule
-            # {
-            #   field  = "path-pattern"
-            #   values = ["/feature*"]
-            # }
-          ]
-        },
-        aivolvex-chat-rule = {
-          priority = 3
-          actions = [{
-            type = "weighted-forward"
-            target_groups = [
-              {
-                target_group_key = "image-instance"
-                weight           = 1 # Adjust weights as needed
-              }
-            ]
-            stickiness = {
-              enabled  = true
-              duration = 3600
-            }
-          }]
-          conditions = [
-            # Define conditions for this rule
-            # {
-            #   field  = "path-pattern"
-            #   values = ["/chat*"]
-            # }
-          ]
+    listeners = {
+      image-http = {
+        port            = 80
+        protocol        = "HTTP"
+        
+        forward = {
+          target_group_key = "image-instance"
+        }
+      },
+      register-http = {
+        port            = 80
+        protocol        = "HTTP"
+        
+        forward = {
+          target_group_key = "register-instance"
+        }
+      },
+      default-http = {
+        port            = 80
+        protocol        = "HTTP"
+        
+        forward = {
+          target_group_key = " default-instance"
         }
       }
-
-      default_action = [{
-        type = "fixed-response"
-        fixed_response = {
-          content_type = "text/plain"
-          message_body = "Default Response"
-          status_code  = 503
-        }
-      }]
     }
-  }
-
+ 
   target_groups = {
     image-instance = {
       name_prefix = "h1"
       protocol    = "HTTP"
       port        = 80
       target_type = "instance"
-      target_id   = module.ec2_instance_image.id
+      target_id   =  module.ec2_instance_image.id
     }
     register-instance = {
       name_prefix = "h1"
       protocol    = "HTTP"
       port        = 80
       target_type = "instance"
-      target_id   = module.ec2_instance_register.id
+      target_id   =  module.ec2_instance_register.id
     }
+
     default-instance = {
       name_prefix = "h1"
       protocol    = "HTTP"
       port        = 80
       target_type = "instance"
-      target_id   = module.ec2_instance_default.id
+      target_id   =  module.ec2_instance_default.id
     }
   }
  
