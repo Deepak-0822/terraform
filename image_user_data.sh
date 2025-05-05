@@ -1,30 +1,21 @@
 #!/bin/bash
-apt-get update
-apt-get install -y nginx
+# Update and install NGINX
+apt update -y
+apt install nginx -y
  
-systemctl start nginx
-systemctl enable nginx
+# Create custom directory for /image path
+mkdir -p /var/www/html/image
  
-# Create content directory
-mkdir -p /usr/share/nginx/html/image
-echo "<h1>Images served from Instance B</h1><img src='data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' alt='dummy'>" > /usr/share/nginx/html/image/index.html
- 
-# Configure Nginx server block
-cat <<EOF > /etc/nginx/sites-available/image
-server {
-    listen 80;
-    server_name localhost;
- 
-    location /image/ {
-        alias /usr/share/nginx/html/image/;
-        index index.html;
-    }
-}
+# Create a simple HTML "Hello from NGINX" page
+cat <<EOF > /var/www/html/image/index.html
+<!DOCTYPE html>
+<html>
+<head><title>Hello</title></head>
+<body>
+<h1>Hello from NGINX /image path!</h1>
+</body>
+</html>
 EOF
  
-# Enable config and disable default
-ln -s /etc/nginx/sites-available/image /etc/nginx/sites-enabled/
-rm /etc/nginx/sites-enabled/default
- 
-# Restart nginx
+# Restart nginx to apply changes
 systemctl restart nginx

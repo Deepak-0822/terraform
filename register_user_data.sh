@@ -1,30 +1,21 @@
 #!/bin/bash
-apt-get update
-apt-get install -y nginx
+# Update and install nginx
+apt update -y
+apt install nginx -y
  
-systemctl start nginx
-systemctl enable nginx
+# Create custom directory for /register path
+mkdir -p /var/www/html/register
  
-# Create content directory
-mkdir -p /usr/share/nginx/html/register
-echo "<h1>register served from Instance B</h1><img src='data:register/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=' alt='dummy'>" > /usr/share/nginx/html/register/index.html
- 
-# Configure Nginx server block
-cat <<EOF > /etc/nginx/sites-available/register
-server {
-    listen 80;
-    server_name localhost;
- 
-    location /register/ {
-        alias /usr/share/nginx/html/register/;
-        index index.html;
-    }
-}
+# Add a simple HTML page for /register
+cat <<EOF > /var/www/html/register/index.html
+<!DOCTYPE html>
+<html>
+<head><title>Register</title></head>
+<body>
+<h1>Hello from /register!</h1>
+</body>
+</html>
 EOF
- 
-# Enable config and disable default
-ln -s /etc/nginx/sites-available/register /etc/nginx/sites-enabled/
-rm /etc/nginx/sites-enabled/default
  
 # Restart nginx
 systemctl restart nginx

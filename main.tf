@@ -24,7 +24,7 @@ module "ec2_instance_image" {
   associate_public_ip_address = true
   instance_type          = var.instance_type
   key_name               = "ec2-key"
-  user_data = file("${path.module}/user_data.sh")
+  user_data = file("${path.module}/image_user_data.sh")
   #vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
   subnet_id              = module.vpc.public_subnets[1]  # Access the first (or desired) public subnet ID from the list
 
@@ -42,7 +42,7 @@ module "ec2_instance_register" {
   associate_public_ip_address = true
   instance_type          = var.instance_type
   key_name               = "ec2-key"
-  user_data = file("${path.module}/user_data.sh")
+  user_data = file("${path.module}/register_user_data.sh")
   subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
@@ -59,7 +59,7 @@ module "ec2_instance_default" {
   associate_public_ip_address = true
   instance_type          = var.instance_type
   key_name               = "ec2-key"
-  user_data = file("${path.module}/user_data.sh")
+  user_data = file("${path.module}/default_user_data.sh")
   subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
@@ -106,31 +106,29 @@ module "alb" {
   }
  
   listeners = {
-    image-http = {
-      port            = 81
-      protocol        = "HTTP"
-      
-      forward = {
-        target_group_key = "image-instance"
-      }
-    }
-    register-http = {
-      port            = 82
-      protocol        = "HTTP"
-      
-      forward = {
-        target_group_key = "register-instance"
-      }
-    }
     default-http = {
-      port            = 80
-      protocol        = "HTTP"
-      
+      port     = 80
+      protocol = "HTTP"
+
       forward = {
-        target_group_key = "default-instance"
+        target_groups = [
+          {
+            target_group_key = "image-instance"
+            weight           = 33 # You can adjust weights as needed
+          },
+          {
+            target_group_key = "register-instance"
+            weight           = 33
+          },
+          {
+            target_group_key = "default-instance"
+            weight           = 34 # Adjust weight to ensure sum is 100 if needed
+          },
+        ]
       }
     }
   }
+
  
   target_groups = {
     image-instance = {
