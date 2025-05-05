@@ -54,7 +54,7 @@ module "ec2_instance_register" {
 module "ec2_instance_default" {
   source = "./modules/ec2"
 
-  name = "${var.environment}-${var.project_name}-ec2-image"
+  name = "${var.environment}-${var.project_name}-ec2-default"
   ami  = "ami-0e35ddab05955cf57"
   associate_public_ip_address = true
   instance_type          = var.instance_type
