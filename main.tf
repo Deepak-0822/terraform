@@ -108,10 +108,7 @@ module "alb" {
       protocol    = "HTTP"
       port        = 80
       target_type = "instance"
-      target_id   = [
-        module.ec2_instance_image.id,
-        module.ec2_instance_register.id
-      ]
+      target_id   =  module.ec2_instance_image.id
     }
   }
  
