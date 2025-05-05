@@ -122,7 +122,7 @@ module "alb" {
         target_group_key = "register-instance"
       }
     }
-     default-http = {
+    default-http = {
       port            = 80
       protocol        = "HTTP"
       
