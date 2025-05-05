@@ -60,7 +60,7 @@ module "ec2_instance_default" {
   instance_type          = var.instance_type
   key_name               = "ec2-key"
   user_data = file("${path.module}/user_data.sh")
-  subnet_id              = module.vpc.public_subnets[2]  # Access the first (or desired) public subnet ID from the list
+  subnet_id              = module.vpc.public_subnets[0]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
     Terraform   = "true"
