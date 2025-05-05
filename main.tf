@@ -114,7 +114,7 @@ module "alb" {
         target_groups = [
           {
             target_group_key = "image-instance"
-            weight           = 33 # You can adjust weights as needed
+            weight           = 33
           },
           {
             target_group_key = "register-instance"
@@ -122,7 +122,7 @@ module "alb" {
           },
           {
             target_group_key = "default-instance"
-            weight           = 34 # Adjust weight to ensure sum is 100 if needed
+            weight           = 34
           },
         ]
       }
