@@ -23,5 +23,4 @@ variable "target_group_port" {
   type = number
 }
 
-variable "instance_id"
-{}
+variable "instance_id"{ }
