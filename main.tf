@@ -31,7 +31,7 @@ module "ec2" {
 }
 
 module "alb" {
-  source          = "./alb-module"
+  source          = "./modules/alb"
   name            = "openproject-alb"
   security_groups          = [module.sg.web_sg_id] 
   subnets                  = module.vpc.public_subnet_ids
@@ -43,13 +43,3 @@ module "alb" {
     Project     = "OpenProject"
   }
 }
-
-
-  security_groups          = [module.sg.web_sg_id] 
-  subnets                  = module.vpc.public_subnet_ids
-  vpc_id                   = module.vpc.vpc_id
-  enable_deletion_protection = false
-  tags = {
-    Environment = "dev"
-    App         = "openproject"
-  }
