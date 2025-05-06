@@ -22,3 +22,7 @@ variable "target_group_name" {}
 variable "target_group_port" {
   type = number
 }
+
+variable "instance_ids" {
+  type    = list(string) 
+}
