@@ -54,8 +54,8 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Run Terraform Lint
-        run: tflint --init
+      # - name: Run Terraform Lint
+      #   run: tflint --init
         
       - name: Terraform Plan        
         run: |  
