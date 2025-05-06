@@ -21,10 +21,10 @@ module "sg" {
 
 module "ec2" {
   source         = "./modules/ec2"
-  name           = "${var.environment}-${var.project_name}-ec2"
+  name           = "${var.environment}-${var.project_name}-openproject"
   ami_id         = "ami-0e35ddab05955cf57"
   instance_type  = var.instance_type
-  key_name               = "ec2-key"
+  key_name       = "ec2-key"
   subnet_ids     = module.vpc.public_subnet_ids
   sg_id          = module.sg.web_sg_id
   user_data = file("${path.module}/user_data.sh")
