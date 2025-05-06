@@ -41,7 +41,8 @@ resource "aws_lb_listener" "this" {
 }
 
 resource "aws_lb_target_group_attachment" "tg_attachment" {
+  count            = length(var.instance_id)
   target_group_arn = aws_lb_target_group.this.arn
-  target_id        = var.instance_id
+  target_id        = var.instance_id[count.index]
   port             = 80
 }
