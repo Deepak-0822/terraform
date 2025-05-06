@@ -1,13 +1,17 @@
 #!/bin/bash
-# Update packages
+# Update and install Docker
 apt-get update -y
+apt-get install -y docker.io
  
-# Install Apache
-apt-get install -y apache2
+# Enable and start Docker service
+systemctl enable docker
+systemctl start docker
  
-# Start Apache and enable it at boot
-systemctl start apache2
-systemctl enable apache2
+# Pull the OpenProject Docker image
+docker pull openproject/community:latest
  
-# Create a simple homepage
-echo "<h1>Welcome to your Apache Server!</h1>" > /var/www/html/index.html
+# Run OpenProject container (port 8080)
+docker run -d \
+  --name openproject \
+  -p 8080:80 \
+  openproject/community:latest

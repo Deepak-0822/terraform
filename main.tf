@@ -5,7 +5,6 @@ module "vpc" {
   name = "${var.environment}-${var.project_name}-vpc"
   vpc_cidr            = var.vpc_cidr
   public_subnet_cidrs = var.public_subnets
-  private_subnet_cidrs = var.private_subnets
   availability_zones  = var.subnet_azs
 
 }
