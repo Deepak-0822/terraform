@@ -1,36 +1,27 @@
-variable "name" {
-  description = "Name prefix for ALB resources"
-  type        = string
+variable "name" {}
+variable "internal" {
+  type    = bool
+  default = false
 }
-
-variable "subnets" {
-  description = "List of subnet IDs"
-  type        = list(string)
-}
-
 variable "security_groups" {
-  description = "List of security group IDs"
-  type        = list(string)
+  type = list(string)
 }
-
-variable "vpc_id" {
-  description = "VPC ID"
-  type        = string
+variable "subnets" {
+  type = list(string)
 }
-
-variable "instance_ids" {
-  description = "EC2 instance IDs to register"
-  type        = list(string)
+variable "vpc_id" {}
+variable "enable_deletion_protection" {
+  type    = bool
+  default = false
 }
-
-variable "target_port" {
-  description = "Port for the target group"
-  type        = number
-  default     = 80
-}
-
 variable "tags" {
-  description = "Tags to apply"
-  type        = map(string)
-  default     = {}
+  type    = map(string)
+  default = {}
 }
+variable "target_group_name" {}
+variable "target_group_port" {
+  type = number
+}
+
+variable "instance_id"
+{}
