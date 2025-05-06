@@ -19,12 +19,6 @@ variable "subnet_azs" {
   default     = null
 }
 
-variable "private_subnets" {
-  description = "The list of private subnets CIDRs."
-  type        = list(string)
-  default     = null
-}
-
 variable "public_subnets" {
   description = "The list of public subnets CIDRs."
   type        = list(string)
