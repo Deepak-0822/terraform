@@ -47,9 +47,12 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      # - name: Terraform Plan        
-      #   run: |  
-      #    terraform plan
+      - name: Run Terraform Lint
+        run: tflint --init && tflint -f compact
+
+      - name: Terraform Plan        
+        run: |  
+         terraform plan
 
       # - name: Terraform Apply
       #   env:
@@ -64,8 +67,8 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      - name: Terraform destroy
-        run: terraform destroy --auto-approve
+      # - name: Terraform destroy
+      #   run: terraform destroy --auto-approve
 
 
 
