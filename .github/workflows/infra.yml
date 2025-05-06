@@ -20,6 +20,13 @@ jobs:
           ls
           chmod 600 private_key.pem
 
+      - name: Install Terraform Lint
+        run: |
+          wget https://github.com/terraform-linters/tflint/releases/download/v0.50.2/tflint_linux_amd64.zip
+          unzip tflint_linux_amd64.zip
+          sudo mv tflint /usr/local/bin/
+          tflint --version
+
       - name: Install Checkov 
         run: |
           python -m pip install --upgrade pip
