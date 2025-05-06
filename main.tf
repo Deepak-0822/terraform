@@ -34,7 +34,7 @@ module "alb" {
   source                   = "./modules/alb"
   name                     = "openproject-alb"
   internal                 = false
-  security_groups          = [module.sg.web_sg_id.id] 
+  security_groups          = [module.sg.web_sg_id] 
   subnets                  = module.vpc.public_subnet_ids
   vpc_id                   = module.vpc.vpc_id
   enable_deletion_protection = false

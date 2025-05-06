@@ -44,8 +44,11 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
+
+
+ ###private
 locals {
-  create_private_subnets = length(try(var.private_subnet_cidrs, [])) > 0 && local.create_vpc
+  create_private_subnets = local.create_vpc && length(var.private_subnet_cidrs) > 0
   create_vpc = var.create_vpc
 }
 
