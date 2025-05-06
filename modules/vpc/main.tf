@@ -14,18 +14,6 @@ resource "aws_internet_gateway" "this" {
   }
 }
 
-resource "aws_nat_gateway" "this" {
-  allocation_id = aws_eip.this.id
-  subnet_id     = aws_subnet.public[0].id
-  tags = {
-    Name = "${var.name}-nat"
-  }
-}
-
-resource "aws_eip" "this" {
-  domain = "vpc"
-}
-
 resource "aws_subnet" "public" {
   count             = 2
   vpc_id            = aws_vpc.this.id
@@ -94,4 +82,22 @@ resource "aws_route_table_association" "private" {
   count          = local.create_private_subnets ? length(var.private_subnet_cidrs) : 0
   subnet_id      = aws_subnet.private[count.index].id
   route_table_id = aws_route_table.private[0].id
+}
+
+resource "aws_eip" "this" {
+  count    = local.create_public_subnets ? 1 : 0
+  domain   = "vpc"
+  tags = {
+    Name = "${var.name}-eip-nat" # Added a tag for clarity
+  }
+}
+
+resource "aws_nat_gateway" "this" {
+  count         = local.create_public_subnets ? 1 : 0
+  allocation_id = aws_eip.this[0].id
+  subnet_id     = length(aws_subnet.public) > 0 ? aws_subnet.public[0].id : null
+  tags = {
+    Name = "${var.name}-nat"
+  }
+  depends_on = [aws_eip.this, aws_subnet.public]
 }
