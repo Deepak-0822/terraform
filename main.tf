@@ -31,15 +31,19 @@ module "ec2" {
 }
 
 module "alb" {
-  source          = "./modules/alb"
-  name            = "openproject-alb"
+  source                   = "./modules/alb"
+  name                     = "openproject-alb"
+  internal                 = false
   security_groups          = [module.sg.web_sg_id] 
   subnets                  = module.vpc.public_subnet_ids
   vpc_id                   = module.vpc.vpc_id
-  instance_ids    = [module.ec2.id]
-  target_port     = 8080
+  instance_ids             = [module.ec2.id]
+  enable_deletion_protection = false
+
   tags = {
     Environment = "dev"
-    Project     = "OpenProject"
+    App         = "openproject"
   }
+  target_group_name = "openproject-tg"
+  target_group_port = 8080
 }
