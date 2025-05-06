@@ -23,4 +23,10 @@ variable "target_group_port" {
   type = number
 }
 
-variable "instance_id"{ }
+variable "target_group_attachment_port" {
+  type = number
+}
+
+variable "instance_id" {
+  type = list(string)
+}
