@@ -6,12 +6,11 @@ apt-get install -y docker.io
 # Enable and start Docker service
 systemctl enable docker
 systemctl start docker
- 
-# Pull the OpenProject Docker image
-docker pull openproject/community:latest
- 
-# Run OpenProject container (port 8080)
-docker run -d \
-  --name openproject \
-  -p 8080:80 \
-  openproject/community:latest
+
+
+docker run -it -p 8080:80 \
+  -e OPENPROJECT_SECRET_KEY_BASE=secret \
+  -e OPENPROJECT_HOST__NAME=0.0.0.0:8080 \
+  -e OPENPROJECT_HTTPS=false \
+  -e OPENPROJECT_DEFAULT__LANGUAGE=en \
+  openproject/openproject:15
