@@ -37,8 +37,12 @@ resource "aws_subnet" "public" {
   }
 }
 
+locals {
+  create_private_subnets = local.create_vpc && length(var.private_subnet_cidrs) > 0
+}
+
 resource "aws_subnet" "private" {
-  count             = 2
+  count             = local.create_private_subnets ? length(var.private_subnet_cidrs) : 0
   vpc_id            = aws_vpc.this.id
   cidr_block        = var.private_subnet_cidrs[count.index]
   availability_zone = var.availability_zones[count.index]
