@@ -31,13 +31,18 @@ module "ec2" {
   user_data = file("${path.module}/user_data.sh")
 }
 
-module "rds" {
-  source         = "./modules/rds"
-  name           = "${var.environment}-${var.project_name}-rds"
-  instance_type  = var.db_instance_type
-  db_user        = "admin"
-  db_password    = var.db_password
-  db_name        = "myappdb"
-  subnet_ids     = module.vpc.private_subnet_ids
-  sg_id          = module.sg.rds_sg_id
+module "alb" {
+  source                   = "./alb"
+  name                     = "openproject-alb"
+  internal                 = false
+  security_groups          = [aws_security_group.alb_sg.id]
+  subnets                  = module.vpc.public_subnets
+  vpc_id                   = module.vpc.vpc_id
+  enable_deletion_protection = false
+  tags = {
+    Environment = "dev"
+    App         = "openproject"
+  }
+  target_group_name = "openproject-tg"
+  target_group_port = 8080
 }
