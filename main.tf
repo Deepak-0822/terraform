@@ -31,7 +31,7 @@ module "ec2" {
 }
 
 module "alb" {
-  source                   = "./alb"
+  source                   = "./modules/alb"
   name                     = "openproject-alb"
   internal                 = false
   security_groups          = [aws_security_group.alb_sg.id]
