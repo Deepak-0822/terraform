@@ -85,7 +85,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_eip" "this" {
-  count    = local.create_public_subnets ? 1 : 0
+  count    = local.create_private_subnets ? 1 : 0
   domain   = "vpc"
   tags = {
     Name = "${var.name}-eip-nat" # Added a tag for clarity
@@ -93,7 +93,7 @@ resource "aws_eip" "this" {
 }
 
 resource "aws_nat_gateway" "this" {
-  count         = local.create_public_subnets ? 1 : 0
+  count         = local.create_private_subnets ? 1 : 0
   allocation_id = aws_eip.this[0].id
   subnet_id     = length(aws_subnet.public) > 0 ? aws_subnet.public[0].id : null
   tags = {
