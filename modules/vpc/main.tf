@@ -58,6 +58,7 @@ resource "aws_route_table_association" "public" {
 
 locals {
   create_private_subnets = length(try(var.private_subnet_cidrs, [])) > 0 && local.create_vpc
+  create_vpc = var.create_vpc
 }
 
 resource "aws_subnet" "private" {
