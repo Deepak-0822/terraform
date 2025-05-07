@@ -29,6 +29,17 @@ module "source_bucket" {
 module "dest_bucket" {
   source = "./modules/s3"
   name   = "image-destination-bucket-123"
-  lambda_arn = ""
-  lambda_permission = ""
+  lambda_arn       = module.lambda.lambda_arn
+  lambda_permission = module.lambda.lambda_permission
+}
+
+resource "aws_s3_bucket_notification" "lambda_trigger" {
+  bucket = module.source_bucket.bucket_name
+
+  lambda_function {
+    lambda_function_arn = module.lambda.lambda_arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [module.lambda] # Wait until lambda + permission are ready
 }

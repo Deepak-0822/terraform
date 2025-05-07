@@ -6,6 +6,7 @@ resource "aws_lambda_function" "this" {
   runtime          = "python3.9"
   source_code_hash = filebase64sha256("${path.module}/lambda_function.zip")
   timeout          = 30
+  layers = ["arn:aws:lambda:ap-south-1:380183619747:layer:new:6"]
 
   environment {
     variables = {
