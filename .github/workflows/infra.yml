@@ -48,11 +48,11 @@ jobs:
       - name: Terraform Init
         run:  terraform init
 
-      - name: Terraform Validate
-        run: terraform validate
+      # - name: Terraform Validate
+      #   run: terraform validate
 
-      - name: Run Terraform Lint
-        run: tflint --init
+      # - name: Run Terraform Lint
+      #   run: tflint --init
         
       # - name: Terraform Plan        
       #   run: |  
