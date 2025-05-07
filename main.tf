@@ -19,7 +19,7 @@ module "lambda" {
 }
 
 module "source_bucket" {
-  source           = "./modules/s3_bucket"
+  source           = "./modules/s3"
   name             = "image-source-bucket-123"
   lambda_arn       = module.lambda.lambda_arn
   lambda_permission = module.lambda.lambda_permission
