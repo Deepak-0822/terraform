@@ -1,48 +1,26 @@
-version: '3.9'
+import boto3
+from PIL import Image
+import io
+import os
 
-services:
-  mysql:
-    image: mysql:8
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: lake
-      MYSQL_USER: merico
-      MYSQL_PASSWORD: merico
-    volumes:
-      - mysql-data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+sns = boto3.client('sns')
+s3 = boto3.client('s3')
 
-  lake:
-    image: mericodev/devlake:latest
-    depends_on:
-      - mysql
-    ports:
-      - "8080:8080"
-
-  config-ui:
-    image: mericodev/devlake-config-ui:latest
-    depends_on:
-      - lake
-    ports:
-      - "4000:4000"
-
-  grafana:
-    image: mericodev/devlake-dashboard:latest
-    ports:
-      - "3002:3000"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    environment:
-      GF_SERVER_ROOT_URL: "http://0.0.0.0:4000/grafana"
-      GF_USERS_DEFAULT_THEME: "light"
-      MYSQL_URL: mysql:3306
-      MYSQL_DATABASE: lake
-      MYSQL_USER: merico
-      MYSQL_PASSWORD: merico
-    depends_on:
-      - mysql
-
-volumes:
-  mysql-data:
-  grafana-storage:
+def lambda_handler(event, context):
+    bucket = event['Records'][0]['s3']['bucket']['name']
+    key    = event['Records'][0]['s3']['object']['key']
+    
+    download_path = f'/tmp/{key}'
+    s3.download_file(bucket, key, download_path)
+    
+    with Image.open(download_path) as img:
+        img = img.resize((128, 128))
+        resized_path = f'/tmp/resized-{key}'
+        img.save(resized_path)
+        
+    s3.upload_file(resized_path, bucket, f'resized/{key}')
+    
+    sns.publish(
+        TopicArn=os.environ['SNS_TOPIC_ARN'],
+        Message=f"Image {key} has been resized and uploaded to resized/{key}"
+    )
