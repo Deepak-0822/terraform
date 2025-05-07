@@ -1,58 +1,11 @@
-variable "environment" {
-  type    = string
+variable "bucket_name" {
+  default = "image-upload-bucket"
 }
 
-variable "project_name" {
-  description = "The CIDR of the VPC"
-  type        = string
+variable "topic_name" {
+  default = "image-processing-updates"
 }
 
-variable "vpc_cidr" {
-  description = "The CIDR of the VPC"
-  type        = string
-  default     = null
-}
-
-variable "subnet_azs" {
-  description = "The list of azs where the subnets should be located"
-  type        = list(string)
-  default     = null
-}
-
-variable "public_subnets" {
-  description = "The list of public subnets CIDRs."
-  type        = list(string)
-  default     = null
-}
-
-variable "single_nat_gateway" {
-  description = "The meantion single az true or false."
-  type        = bool
-  default     = null
-}
-
-variable "one_nat_gateway_per_az" {
-  description = "The meantioning per az per nat."
-  type        = bool
-  default     = null
-}
-
-## ec2
-
-variable "instance_type" {
-  description = "The CIDR of the VPC"
-  type        = string
-  default     = null
-}
-
-variable "db_instance_type" {
-  description = "The CIDR of the VPC"
-  type        = string
-  default     = null
-}
-
-variable "db_password" {
-  description = "The CIDR of the VPC"
-  type        = string
-  default     = null
+variable "lambda_name" {
+  default = "image-resize-lambda"
 }
