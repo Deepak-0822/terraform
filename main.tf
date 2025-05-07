@@ -27,7 +27,7 @@ module "source_bucket" {
 }
 
 module "dest_bucket" {
-  source = "./modules/s3_bucket"
+  source = "./modules/s3"
   name   = "image-destination-bucket-123"
   lambda_arn = ""
   lambda_permission = ""
