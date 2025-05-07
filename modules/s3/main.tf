@@ -14,6 +14,3 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   depends_on = [var.lambda_permission]
 }
 
-output "bucket_name" {
-  value = aws_s3_bucket.image_bucket.bucket
-}

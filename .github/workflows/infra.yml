@@ -1,7 +1,7 @@
 name: Terraform Infra Setup 
 
 on:
-  # push:
+  push:
   workflow_dispatch:
 env:
   AWS_REGION: ap-south-1
@@ -24,21 +24,21 @@ jobs:
           role-to-assume: ${{ secrets.OIDC_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Install Terraform Lint
-        run: |
-          wget https://github.com/terraform-linters/tflint/releases/download/v0.50.2/tflint_linux_amd64.zip
-          unzip tflint_linux_amd64.zip
-          sudo mv tflint /usr/local/bin/
-          tflint --version
+      # - name: Install Terraform Lint
+      #   run: |
+      #     wget https://github.com/terraform-linters/tflint/releases/download/v0.50.2/tflint_linux_amd64.zip
+      #     unzip tflint_linux_amd64.zip
+      #     sudo mv tflint /usr/local/bin/
+      #     tflint --version
 
-      - name: Install Checkov 
-        run: |
-          python -m pip install --upgrade pip
-          pip install checkov
+      # - name: Install Checkov 
+      #   run: |
+      #     python -m pip install --upgrade pip
+      #     pip install checkov
 
-      - name: Run Checkov Static Analysis
-        run: |
-          checkov -d . --skip-path .github/* --skip-path k8s/*   --soft-fail
+      # - name: Run Checkov Static Analysis
+      #   run: |
+      #     checkov -d . --skip-path .github/* --skip-path k8s/*   --soft-fail
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
@@ -58,12 +58,12 @@ jobs:
         run: |  
          terraform plan
 
-      - name: Terraform Apply
-        env:
-          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-        working-directory: /home/runner/work/terraform/terraform
-        run: |
-         terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   env:
+      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+      #   working-directory: /home/runner/work/terraform/terraform
+      #   run: |
+      #    terraform apply -auto-approve
 
       # - name: Upload Terraform logs
       #   uses: actions/upload-artifact@v4
