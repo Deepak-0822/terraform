@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 env:
   AWS_REGION: ap-south-1
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
   terraform:
@@ -15,12 +18,11 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Save EC2 Private Key
-        run: |
-          echo "${{ secrets.EC2_PRIVATE_KEY }}"> private_key.pem
-          pwd
-          ls
-          chmod 600 private_key.pem
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Install Terraform Lint
         run: |
@@ -42,12 +44,6 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.10.5
-
-      - name: Configure AWS Credentials via OIDC
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.OIDC_TOKEN }}
-          aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform Init
         run:  terraform init
