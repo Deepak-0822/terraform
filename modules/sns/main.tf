@@ -1,8 +1,9 @@
-resource "aws_sns_topic" "sns_topic" {
+resource "aws_sns_topic" "this" {
   name = var.topic_name
 }
 
-output "topic_arn" {
-  value = aws_sns_topic.sns_topic.arn
+resource "aws_sns_topic_subscription" "email" {
+  topic_arn = aws_sns_topic.this.arn
+  protocol  = "email"
+  endpoint  = var.email_address
 }
-
