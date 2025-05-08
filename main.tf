@@ -13,13 +13,9 @@ module "lambda" {
   source             = "./modules/lambda"
   function_name      = "image-resizer"
   iam_role_arn       = module.iam.lambda_role_arn
-  source_bucket_arn  = module.source_bucket.bucket_arn
+  dest_bucket        = module.dest_bucket.bucket_name
   sns_topic_arn      = module.sns.topic_arn
-
-  # Add environment variables for Lambda
-  environment_variables = {
-    DEST_BUCKET = module.dest_bucket.bucket_name
-  }
+  source_bucket_arn  = module.source_bucket.bucket_arn
 }
 
 module "source_bucket" {

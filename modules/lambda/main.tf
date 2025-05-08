@@ -1,5 +1,5 @@
 resource "aws_lambda_function" "this" {
-  filename         = "${path.module}/lambda_function.zip"
+  filename         = "${path.module}/lambda_function.py"
   function_name    = var.function_name
   role             = var.iam_role_arn
   handler          = "lambda_function.lambda_handler"
