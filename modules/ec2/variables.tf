@@ -2,9 +2,15 @@ variable "name" {}
 variable "ami_id" {}
 variable "instance_type" {}
 variable "subnet_ids" {
-  type = list(string)
+  type    = list(string)
+  default = []
 }
-variable "sg_id" {}
+
+variable "sg_id" {
+  type    = list(string)
+  default = []
+}
+
 
 variable "user_data" {
   description = "The user data to provide when launching the instance. Do not pass gzip-compressed data via this argument; see user_data_base64 instead"

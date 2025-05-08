@@ -1,25 +1,32 @@
-resource "aws_lambda_function" "this" {
-  filename         = "${path.module}/lambda_function.zip"
-  function_name    = var.function_name
-  role             = var.iam_role_arn
-  handler          = "lambda_function.lambda_handler"
-  runtime          = "python3.12"
-  source_code_hash = filebase64sha256("${path.module}/lambda_function.zip")
-  timeout          = 30
-  layers = ["arn:aws:lambda:ap-south-1:380183619747:layer:new:6"]
-
-  environment {
-    variables = {
-      DEST_BUCKET = var.dest_bucket
-      SNS_TOPIC   = var.sns_topic_arn
+data "aws_iam_policy_document" "lambda_assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
     }
   }
 }
 
-resource "aws_lambda_permission" "allow_s3" {
-  statement_id  = "AllowExecutionFromS3"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.this.arn
-  principal     = "s3.amazonaws.com"
-  source_arn    = var.source_bucket_arn
+resource "aws_iam_role" "lambda_role" {
+  name               = "${var.function_name}-role"
+  assume_role_policy = data.aws_iam_policy_document.lambda_assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
+}
+
+resource "aws_lambda_function" "this" {
+  filename         = var.lambda_zip_path
+  function_name    = var.function_name
+  role             = aws_iam_role.lambda_role.arn
+  handler          = var.handler
+  runtime          = var.runtime
+  source_code_hash = filebase64sha256(var.lambda_zip_path)
+
+  environment {
+    variables = var.environment_variables
+  }
 }

@@ -1,45 +1,37 @@
-module "iam" {
-  source = "./modules/iam"
-  name   = "image-processor-role"
+##ec2
+
+module "ec2" {
+  source         = "./modules/ec2"
+  name           = "${var.environment}-${var.project_name}-ec2"
+  ami_id         = "ami-0e35ddab05955cf57"
+  instance_type  = var.instance_type
+  key_name               = "ec2-key"
+}
+module "lambda_start" {
+  source               = "./modules/lambda"
+  function_name        = "start-instance"
+  lambda_zip_path      = "./lambda_start.py"
+  environment_variables = length(module.ec2.id) > 0 ? { INSTANCE_ID = module.ec2.id[0] } : {}
 }
 
-module "sns" {
-  source        = "./modules/sns"
-  topic_name    = "image-process-topic"
-  email_address = "deepak042024@gmail.com"
+module "lambda_stop" {
+  source               = "./modules/lambda"
+  function_name        = "stop-instance"
+  lambda_zip_path      = "./lambda_stop.py"
+  environment_variables = length(module.ec2.id) > 0 ? { INSTANCE_ID = module.ec2.id[0] } : {}
+
 }
 
-module "lambda" {
-  source             = "./modules/lambda"
-  function_name      = "image-resizer"
-  iam_role_arn       = module.iam.lambda_role_arn
-  dest_bucket        = module.dest_bucket.bucket_name
-  sns_topic_arn      = module.sns.topic_arn
-  source_bucket_arn  = module.source_bucket.bucket_arn
+module "cloudwatch_start" {
+  source     = "./modules/cloudwatch_event"
+  rule_name  = "start-schedule"
+  schedule   = "cron(0 8 ? * MON-FRI *)"
+  lambda_arn = module.lambda_start.lambda_arn
 }
 
-module "source_bucket" {
-  source           = "./modules/s3"
-  name             = "image-source-bucket-123"
-  lambda_arn       = module.lambda.lambda_arn
-  lambda_permission = module.lambda.lambda_permission
-  prefix           = "uploads/"
-}
-
-module "dest_bucket" {
-  source = "./modules/s3"
-  name   = "image-destination-bucket-123"
-  lambda_arn       = module.lambda.lambda_arn
-  lambda_permission = module.lambda.lambda_permission
-}
-
-resource "aws_s3_bucket_notification" "lambda_trigger" {
-  bucket = module.source_bucket.bucket_name
-
-  lambda_function {
-    lambda_function_arn = module.lambda.lambda_arn
-    events              = ["s3:ObjectCreated:*"]
-  }
-
-  depends_on = [module.lambda] # Wait until lambda + permission are ready
+module "cloudwatch_stop" {
+  source     = "./modules/cloudwatch_event"
+  rule_name  = "stop-schedule"
+  schedule   = "cron(0 17 ? * MON-FRI *)"
+  lambda_arn = module.lambda_stop.lambda_arn
 }
