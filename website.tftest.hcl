@@ -1,5 +1,5 @@
 run "setup_tests" {
     module {
-        source = "./."
+        source = "./"
     }
 }
