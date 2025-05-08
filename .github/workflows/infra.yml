@@ -27,7 +27,7 @@ jobs:
       - name: Install  dependencies and create ZIP
         run: |
           cd modules/lambda
-          zip lambda_function.zip lambda_function.py
+          zip *.zip *.py
           ls
 
       # - name: Install Terraform Lint
@@ -51,13 +51,13 @@ jobs:
         with:
           terraform_version: 1.10.5
 
-      - name: Generate terraform docs
-        uses: terraform-docs/gh-actions@main
-        with:          
-          working-dir: ./
-          output-file: README.md
-          output-method: inject
-          git-push: "true"
+      # - name: Generate terraform docs
+      #   uses: terraform-docs/gh-actions@main
+      #   with:          
+      #     working-dir: ./
+      #     output-file: README.md
+      #     output-method: inject
+      #     git-push: "true"
 
       - name: Terraform Init
         run: | 
@@ -68,8 +68,8 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Terraform Format
-        run: terraform format
+      # - name: Terraform Format
+      #   run: terraform format
 
       # - name: Run Terraform Lint
       #   run: tflint --init
@@ -79,12 +79,12 @@ jobs:
       #   run: |  
       #    terraform plan
 
-      # - name: Terraform Apply
-      #   env:
-      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-      #   working-directory: /home/runner/work/terraform/terraform
-      #   run: |
-      #    terraform apply -auto-approve
+      - name: Terraform Apply
+        env:
+          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+        working-directory: /home/runner/work/terraform/terraform
+        run: |
+         terraform apply -auto-approve
 
       # - name: Upload Terraform logs
       #   uses: actions/upload-artifact@v4
