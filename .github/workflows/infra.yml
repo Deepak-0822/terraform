@@ -26,8 +26,6 @@ jobs:
 
       - name: Install  dependencies and create ZIP
         run: |
-          cd use-case-05/files/js
-          npm install
           zip -r ./modules/lambda/lambda_function.py .
           ls
 
