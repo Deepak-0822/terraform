@@ -8,24 +8,19 @@ data "archive_file" "lambda_zip" {
 resource "aws_lambda_function" "this" {
   filename         = data.archive_file.lambda_zip.output_path
   function_name    = var.function_name
-  role             = var.iam_role_arn
-  handler          = "lambda_function.lambda_handler"
-  runtime          = "Node.js 18x"
+  role             = var.role_arn
+  handler          = var.handler
+  runtime          = var.runtime
+  timeout          = var.timeout
+  memory_size      = var.memory_size
   source_code_hash = data.archive_file.lambda_zip.output_base64sha256
-  timeout          = 30
 
   environment {
-    variables = {
-      DEST_BUCKET = var.dest_bucket
-      SNS_TOPIC   = var.sns_topic_arn
-    }
+    variables = var.environment_variables
   }
-}
 
-resource "aws_lambda_permission" "allow_s3" {
-  statement_id  = "AllowExecutionFromS3"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.this.arn
-  principal     = "s3.amazonaws.com"
-  source_arn    = var.source_bucket_arn
+  tags = var.tags
+
+  # Add Lambda Layers for dependencies if needed
+  layers = var.lambda_layers
 }

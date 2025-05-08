@@ -43,3 +43,22 @@ resource "aws_s3_bucket_notification" "lambda_trigger" {
 
   depends_on = [module.lambda] # Wait until lambda + permission are ready
 }
+
+
+module "lambda_resize" {
+  source = "./modules/lambda"
+ 
+  function_name         = "image-resizer"
+  lambda_source_dir     = "${path.module}/lambda_package"
+  handler               = "resize_image.handler"
+  runtime               = "nodejs18.x"
+  timeout               = 60
+  memory_size           = 256
+  role_arn              = module.lambda_iam.role_arn
+ 
+  environment_variables = {
+    DESTINATION_BUCKET = module.dest_bucket.bucket_id
+    SNS_TOPIC_ARN      = module.sns.topic_arn
+    RESIZE_WIDTH       = "800"
+  }
+}
