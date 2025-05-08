@@ -2,7 +2,7 @@ resource "aws_lambda_function" "this" {
   filename         = "${path.module}/lambda_function.zip"
   function_name    = var.function_name
   role             = var.iam_role_arn
-  handler          = "index.handler"
+  handler          = "lambda_function.lambda_handler"
   runtime          = "python3.9"
   source_code_hash = filebase64sha256("${path.module}/lambda_function.zip")
   timeout          = 30
