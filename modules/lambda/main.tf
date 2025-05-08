@@ -1,12 +1,18 @@
+data "archive_file" "lambda_zip" {
+  type        = "zip"
+  source_dir  = var.lambda_source_dir
+  output_path = "${path.module}/lambda_function.zip"
+  excludes    = ["package.json", "package-lock.json", "node_modules/.package-lock.json"]
+}
+
 resource "aws_lambda_function" "this" {
-  filename         = "${path.module}/lambda_function.zip"
+  filename         = data.archive_file.lambda_zip.output_path
   function_name    = var.function_name
   role             = var.iam_role_arn
-  handler          = "lambda_function.handler"
-  runtime          = "python3.9"
-  source_code_hash = filebase64sha256("${path.module}/lambda_function.zip")
+  handler          = "lambda_function.lambda_handler"
+  runtime          = "Node.js 18x"
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
   timeout          = 30
-  layers = ["arn:aws:lambda:ap-south-1:380183619747:layer:new:6"]
 
   environment {
     variables = {
