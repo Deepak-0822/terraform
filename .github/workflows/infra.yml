@@ -26,7 +26,6 @@ jobs:
 
       - name: Install  dependencies and create ZIP
         run: |
-          cd modules/lambda
           zip *.zip *.py
           ls
 
