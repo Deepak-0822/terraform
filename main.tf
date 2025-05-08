@@ -10,14 +10,14 @@ module "ec2" {
 module "lambda_start" {
   source               = "./modules/lambda"
   function_name        = "start-instance"
-  lambda_zip_path      = "./lambda_start.py"
+  lambda_zip_path      = "./lambda_start.zip"
   environment_variables = length(module.ec2.id) > 0 ? { INSTANCE_ID = module.ec2.id[0] } : {}
 }
 
 module "lambda_stop" {
   source               = "./modules/lambda"
   function_name        = "stop-instance"
-  lambda_zip_path      = "./lambda_stop.py"
+  lambda_zip_path      = "./lambda_stop.zip"
   environment_variables = length(module.ec2.id) > 0 ? { INSTANCE_ID = module.ec2.id[0] } : {}
 
 }
