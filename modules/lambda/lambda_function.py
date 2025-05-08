@@ -66,4 +66,10 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': error_msg
         }
+    response = sns_client.publish(
+        TopicArn=SNS_TOPIC_ARN,
+        Subject="Image Resize Success",
+        Message=message
+    )
+    print("SNS publish response:", response)
  
