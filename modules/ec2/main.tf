@@ -1,13 +1,12 @@
-resource "aws_instance" "web" {
-  count         = length(var.subnet_ids)
+resource "aws_instance" "this" {
   ami           = var.ami_id
   instance_type = var.instance_type
-  subnet_id = length(var.subnet_ids) > 0 ? var.subnet_ids[count.index] : null
-  vpc_security_group_ids = length(var.sg_id) > 0 ? var.sg_id : null
-  key_name             = var.key_name
-  user_data     =  var.user_data
+  subnet_id     = var.subnet_id
+  key_name      = var.key_name
+
+  vpc_security_group_ids = var.security_group_ids
 
   tags = {
-    Name = "${var.name}-web-${count.index + 1}"
+    Name = var.instance_name
   }
 }

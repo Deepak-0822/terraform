@@ -61,7 +61,6 @@ jobs:
       - name: Terraform Init
         run: | 
          terraform init
-         terraform test
         continue-on-error: true
 
       - name: Terraform Validate

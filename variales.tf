@@ -46,11 +46,12 @@ variable "one_nat_gateway_per_az" {
 
 ## ec2
 
-variable "instance_type" {
-  description = "The CIDR of the VPC"
-  type        = string
-  default     = null
+
+variable "user_data" {
+  type    = string
+  default = ""
 }
+
 
 variable "db_instance_type" {
   description = "The CIDR of the VPC"
@@ -68,3 +69,11 @@ variable "environment_variables" {
   type    = map(string)
   default = {}
 }
+variable "ami_id" {}
+variable "instance_type" {}
+variable "subnet_id" {}
+variable "security_group_ids" {
+  type = list(string)
+}
+variable "key_name" {}
+variable "instance_name" {}

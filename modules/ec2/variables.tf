@@ -1,25 +1,29 @@
-variable "name" {}
-variable "ami_id" {}
-variable "instance_type" {}
-variable "subnet_ids" {
-  type    = list(string)
-  default = []
-}
-
-variable "sg_id" {
-  type    = list(string)
-  default = []
-}
-
-
-variable "user_data" {
-  description = "The user data to provide when launching the instance. Do not pass gzip-compressed data via this argument; see user_data_base64 instead"
+variable "ami_id" {
+  description = "AMI ID for the EC2 instance"
   type        = string
-  default     = null
+}
+
+variable "instance_type" {
+  description = "EC2 instance type"
+  type        = string
+}
+
+variable "subnet_id" {
+  description = "Subnet ID where EC2 will be launched"
+  type        = string
+}
+
+variable "security_group_ids" {
+  description = "List of security group IDs"
+  type        = list(string)
 }
 
 variable "key_name" {
-  description = "Key name of the Key Pair to use for the instance; which can be managed using the `aws_key_pair` resource"
+  description = "Key pair name for SSH access"
   type        = string
-  default     = null
+}
+
+variable "instance_name" {
+  description = "Name tag for the instance"
+  type        = string
 }
