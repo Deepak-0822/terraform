@@ -54,7 +54,7 @@ jobs:
       - name: Terraform Init
         run: | 
          terraform init
-        #  terraform test
+         terraform test
 
       - name: Terraform Validate
         run: terraform validate
@@ -82,7 +82,7 @@ jobs:
 
       - name: Terraform destroy
         run: terraform destroy --auto-approve
-        
+
 
 
 
