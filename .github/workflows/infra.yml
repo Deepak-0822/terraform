@@ -24,6 +24,13 @@ jobs:
           role-to-assume: ${{ secrets.OIDC_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Install  dependencies and create ZIP
+        run: |
+          cd use-case-05/files/js
+          npm install
+          zip -r ./modules/lambda/lambda_function.py .
+          ls
+
       # - name: Install Terraform Lint
       #   run: |
       #     wget https://github.com/terraform-linters/tflint/releases/download/v0.50.2/tflint_linux_amd64.zip
@@ -53,6 +60,7 @@ jobs:
 
       # - name: Run Terraform Lint
       #   run: tflint --init
+
         
       - name: Terraform Plan        
         run: |  
