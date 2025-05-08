@@ -9,7 +9,7 @@ sns_client = boto3.client('sns', region_name='ap-south-1') # Specify region for 
 
 # Required environment variables
 DEST_BUCKET = os.environ.get('DEST_BUCKET')
-sns_topic_arn = 'arn:aws:sns:ap-south-1:380183619747:image-process-topic'
+sns_topic_arn = os.environ.get('SNS_TOPIC')
 
 def resize_image(image_path, resized_path):
     try:
