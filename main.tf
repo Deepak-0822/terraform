@@ -6,7 +6,7 @@ module "iam" {
 module "sns" {
   source        = "./modules/sns"
   topic_name    = "image-process-topic"
-  email_address = "notify@example.com"
+  email_address = "deepak042024@gmail.com"
 }
 
 module "lambda" {
