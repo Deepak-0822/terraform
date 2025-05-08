@@ -1,10 +1,10 @@
 resource "aws_lambda_function" "this" {
-  filename         = "${path.module}/lambda_function.py"
+  filename         = "${path.module}/lambda_function.zip"
   function_name    = var.function_name
   role             = var.iam_role_arn
   handler          = "lambda_function.lambda_handler"
   runtime          = "python3.12"
-  source_code_hash = filebase64sha256("${path.module}/lambda_function.py")
+  source_code_hash = filebase64sha256("${path.module}/lambda_function.zip")
   timeout          = 30
   layers = ["arn:aws:lambda:ap-south-1:380183619747:layer:new:6"]
 
