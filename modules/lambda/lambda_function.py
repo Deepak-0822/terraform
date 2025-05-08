@@ -9,7 +9,7 @@ sns_client = boto3.client('sns')
  
 # Required environment variables
 DEST_BUCKET = os.environ.get('DEST_BUCKET')
-SNS_TOPIC_ARN = os.environ.get('SNS_TOPIC_ARN')
+sns_topic_arn = 'arn:aws:sns:ap-south-1:380183619747:image-process-topic'
  
 def resize_image(image_path, resized_path):
     try:
@@ -40,7 +40,7 @@ def lambda_handler(event, context):
  
         # Send SNS notification (Success)
         message = f"The image '{file_name}' was successfully resized and uploaded to '{DEST_BUCKET}/resized/{file_name}'."
-        sns.publish(TopicArn=SNS_TOPIC_ARN, Message=message)
+        sns.publish(TopicArn=sns_topic_arn, Message=message)
         else:
                 # Log an error message if the event record structure is unexpected
                 print("Error: Invalid S3 event record structure")
@@ -54,9 +54,9 @@ def lambda_handler(event, context):
     except Exception as e:
         # Send SNS notification (Failure)
         error_msg = f"Image processing failed: {str(e)}"
-        if SNS_TOPIC_ARN:
+        if sns_topic_arn:
             sns_client.publish(
-                TopicArn=SNS_TOPIC_ARN,
+                TopicArn=sns_topic_arn,
                 Subject="Image Resize Failed",
                 Message=error_msg
             )
