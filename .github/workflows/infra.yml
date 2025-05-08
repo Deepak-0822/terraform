@@ -53,8 +53,8 @@ jobs:
 
       - name: Terraform Init
         run: | 
-         terraform test
          terraform init
+         terraform test
 
       - name: Terraform Validate
         run: terraform validate
