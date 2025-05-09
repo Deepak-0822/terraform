@@ -77,12 +77,12 @@ jobs:
       #   run: |  
       #    terraform plan
 
-      - name: Terraform Apply
-        env:
-          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-        working-directory: /home/runner/work/terraform/terraform
-        run: |
-         terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   env:
+      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+      #   working-directory: /home/runner/work/terraform/terraform
+      #   run: |
+      #    terraform apply -auto-approve
 
       # - name: Upload Terraform logs
       #   uses: actions/upload-artifact@v4
@@ -90,8 +90,8 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      # - name: Terraform destroy
-      #   run: terraform destroy --auto-approve
+      - name: Terraform destroy
+        run: terraform destroy --auto-approve
 
 
 
@@ -99,21 +99,3 @@ jobs:
 
 
 
-
-
-# module "alb" {
-#   source                   = "./modules/alb"
-#   name                     = "openproject-alb"
-#   internal                 = false
-#   security_groups          = [module.sg.web_sg_id] 
-#   subnets                  = module.vpc.public_subnet_ids
-#   vpc_id                   = module.vpc.vpc_id
-#   instance_id              = module.ec2.id
-#   enable_deletion_protection = false
-#   tags = {
-#     Environment = "dev"
-#     App         = "openproject"
-#   }
-#   target_group_name = "openproject-tg"
-#   target_group_port = 8080
-# }
