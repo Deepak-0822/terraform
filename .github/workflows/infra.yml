@@ -92,8 +92,8 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      # - name: Terraform destroy
-      #   run: terraform destroy --auto-approve
+      - name: Terraform destroy
+        run: terraform destroy --auto-approve
 
 
 
