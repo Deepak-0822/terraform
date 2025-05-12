@@ -68,7 +68,7 @@ resource "aws_cloudwatch_dashboard" "demo-dashboard" {
           ]
           period = 300
           stat   = "Average"
-          region = "us-east-1"
+          region = "ap-south-1"
           title  = "${var.ec2-instance} - CPU Utilization"
         }
       },
@@ -101,7 +101,7 @@ resource "aws_cloudwatch_dashboard" "demo-dashboard" {
           ]
           period = 300
           stat   = "Average"
-          region = "us-east-1"
+          region = "ap-south-1"
           title  = "${var.ec2-instance} - NetworkIn"
         }
       }
