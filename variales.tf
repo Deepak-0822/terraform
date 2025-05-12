@@ -77,3 +77,9 @@ variable "security_group_ids" {
 }
 variable "key_name" {}
 variable "instance_name" {}
+
+
+variable "ec2-instance" {
+  type        = string
+  default     = "i-0d267d2f811fba8aa"
+}
