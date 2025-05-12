@@ -44,7 +44,7 @@ module "cloudwatch_stop" {
 }
 
 
----
+
 resource "aws_cloudwatch_dashboard" "demo-dashboard" {
   dashboard_name = "demo-dashboard-${var.ec2-instance}"
 
