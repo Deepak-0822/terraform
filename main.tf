@@ -73,5 +73,27 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
 module "sns" {
   source        = "./modules/sns"
   topic_name    = "image-process-topic"
-  email_address = "d042024@gmail.com"
+  email_address = "deepak-b@hcltech.com"
+}
+
+resource "aws_cloudtrail_event_data_store" "lambda_event_store" {
+  name                             = "lambda-event-store"
+  multi_region_enabled             = true
+  organization_enabled             = false
+  retention_period                 = 90
+  termination_protection_enabled  = false
+
+  advanced_event_selector {
+    name = "All Lambda Data Events"
+
+    field_selector {
+      field  = "eventCategory"
+      equals = ["Data"]
+    }
+
+    field_selector {
+      field  = "resources.type"
+      equals = ["AWS::Lambda::Function"]
+    }
+  }
 }
