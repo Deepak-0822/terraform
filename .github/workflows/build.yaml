@@ -15,11 +15,6 @@ on:
         description: 'Docker tag for the image'
         required: true
         type: string
-env:
-  AWS_REGION: ap-south-1
-permissions:
-  id-token: write
-  contents: write
 
 jobs:
   build-and-push:
