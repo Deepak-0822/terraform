@@ -15,10 +15,10 @@ on:
         description: 'Docker tag for the image (e.g., latest)'
         required: true
         type: string
+
 permissions:
   id-token: write
   contents: write
-
 
 jobs:
   build-and-push:
@@ -26,14 +26,12 @@ jobs:
 
     env:
       AWS_REGION: ap-south-1
-      ECR_REPO_NAME: ${{ github.event.inputs.ecr_repo_name }}
-      IMAGE_TAG: ${{ github.event.inputs.docker_tag }}
 
     steps:
       - name: Checkout the Repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.event.inputs.repo_name }}
+          repository: ${{ inputs.repo_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up JDK 21
@@ -63,20 +61,19 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build Docker Image
+      - name: Build, Tag, and Push Docker Image
         run: |
-          echo "Building Docker image..."
-          docker build -t ${ECR_REPO_NAME}:${IMAGE_TAG} .
-
-      - name: Tag and Push Docker Image to ECR
-        run: |
-          echo "Tagging and pushing Docker image..."
           AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-          ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-          ECR_IMAGE=${ECR_REGISTRY}/${ECR_REPO_NAME}:${IMAGE_TAG}
+          ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+          IMAGE_NAME=${{ inputs.ecr_repo_name }}
+          IMAGE_TAG=${{ inputs.docker_tag }}
+          ECR_IMAGE=${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
 
-          echo "ECR_IMAGE=$ECR_IMAGE" >> $GITHUB_ENV  # for future steps if needed
-          docker tag ${ECR_REPO_NAME}:${IMAGE_TAG} ${ECR_REPO_NAME}
-          docker push ${ECR_REPO_NAME}
+          echo "Building Docker image..."
+          docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
 
+          echo "Tagging Docker image..."
+          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_IMAGE}
 
+          echo "Pushing Docker image to ECR..."
+          docker push ${ECR_IMAGE}
