@@ -7,7 +7,7 @@ on:
         description: 'GitHub repository to checkout (owner/repo format)'
         required: true
         type: string
-      docker_image:
+      ecr_repo_name:
         description: 'Docker image name to push (e.g., my-app)'
         required: true
         type: string
@@ -15,6 +15,10 @@ on:
         description: 'Docker tag for the image (e.g., latest)'
         required: true
         type: string
+permissions:
+  id-token: write
+  contents: write
+
 
 jobs:
   build-and-push:
@@ -22,7 +26,7 @@ jobs:
 
     env:
       AWS_REGION: ap-south-1
-      ECR_REPO_NAME: ${{ github.event.inputs.docker_image }}
+      ECR_REPO_NAME: ${{ github.event.inputs.ecr_repo_name }}
       IMAGE_TAG: ${{ github.event.inputs.docker_tag }}
 
     steps:
