@@ -1,4 +1,3 @@
-output "lambda_role_arn" {
-  description = "The ID of the instance"
-  value = aws_iam_role.lambda_exec.arn
+output "role_arn" {
+  value = aws_iam_role.lambda_exec_role.arn
 }
