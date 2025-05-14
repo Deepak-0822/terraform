@@ -67,7 +67,7 @@ jobs:
         run: terraform validate
 
       - name: Terraform Format
-        run: terraform format
+        run: terraform fmt
 
       - name: Run Terraform Lint
         run: tflint --init
