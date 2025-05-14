@@ -24,10 +24,10 @@ jobs:
           role-to-assume: ${{ secrets.OIDC_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Install  dependencies and create ZIP
-        run: |
-          zip *.zip *.py
-          ls
+      # - name: Install  dependencies and create ZIP
+      #   run: |
+      #     zip *.zip *.py
+      #     ls
 
       - name: Install Terraform Lint
         run: |
