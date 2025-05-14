@@ -15,17 +15,17 @@ on:
         description: 'Docker tag for the image'
         required: true
         type: string
-      aws_region:
-        description: 'AWS Region for ECR (e.g., us-east-1)'
-        required: true
-        type: string
+      # aws_region:
+      #   description: 'AWS Region for ECR (e.g., us-east-1)'
+      #   required: true
+      #   type: string
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     env:
-      AWS_REGION: ${{ github.event.inputs.aws_region }}
+      AWS_REGION: ${{ env.AWS_REGION }}
       ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
 
     permissions:
@@ -55,7 +55,7 @@ jobs:
         with:
           name: java-app-artifact
           path: target/*.jar
-          
+
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
