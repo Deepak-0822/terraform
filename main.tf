@@ -77,7 +77,7 @@ module "sns" {
 }
 
 resource "aws_cloudtrail_event_data_store" "lambda_event_store" {
-  name                             = "lambda-event-store"
+  name                             = "lambda-event-data-store"
   multi_region_enabled             = true
   organization_enabled             = false
   retention_period                 = 90
