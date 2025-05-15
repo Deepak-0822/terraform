@@ -10,6 +10,7 @@ resource "aws_apigatewayv2_integration" "lambda_integration" {
   integration_uri  = "arn:aws:lambda:ap-south-1:971422676158:function:my-container-lambda"
 }
 
+
 resource "aws_apigatewayv2_route" "default_route" {
   api_id    = aws_apigatewayv2_api.api.id
   route_key = "GET /hello"
