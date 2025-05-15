@@ -1,18 +1,22 @@
-name: CI Java Build and Push to AWS ECR
+name: CI Docker Build and Push to AWS ECR (Multi-App)
 
 on:
   workflow_dispatch:
     inputs:
       repo_name:
-        description: 'GitHub repository to checkout (owner/repo format)'
+        description: 'GitHub repository (owner/repo)'
+        required: true
+        type: string
+      service_folder:
+        description: 'Subfolder name for the microservice (e.g., patient-service)'
         required: true
         type: string
       ecr_repo_name:
-        description: 'repo name'
+        description: 'ECR repo name (e.g., my-app)'
         required: true
         type: string
       docker_tag:
-        description: 'Docker tag for the image (e.g., latest)'
+        description: 'Docker image tag (e.g., latest)'
         required: true
         type: string
 
@@ -46,6 +50,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build, Tag, and Push Docker Image
+        working-directory: cloned-repo/${{ inputs.service_folder }}
         run: |
           AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
           ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
