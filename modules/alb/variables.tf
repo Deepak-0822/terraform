@@ -1,32 +1,19 @@
-variable "name" {}
-variable "internal" {
-  type    = bool
-  default = false
-}
-variable "security_groups" {
-  type = list(string)
-}
-variable "subnets" {
-  type = list(string)
-}
-variable "vpc_id" {}
-variable "enable_deletion_protection" {
-  type    = bool
-  default = false
-}
-variable "tags" {
-  type    = map(string)
-  default = {}
-}
-variable "target_group_name" {}
-variable "target_group_port" {
-  type = number
+variable "name" {
+  description = "Name for ALB"
+  type        = string
 }
 
-variable "target_group_attachment_port" {
-  type = number
+variable "vpc_id" {
+  description = "VPC ID for ALB"
+  type        = string
 }
 
-variable "instance_id" {
-  type = list(string)
+variable "sg_id" {
+  description = "Security Group ID for ALB"
+  type        = string
+}
+
+variable "subnet_ids" {
+  description = "Subnets for ALB"
+  type        = list(string)
 }

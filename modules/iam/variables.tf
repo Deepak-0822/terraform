@@ -1,1 +1,1 @@
-variable "lambda_role_name" {}
+variable "role_name" {}

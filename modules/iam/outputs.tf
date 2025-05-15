@@ -1,3 +1,3 @@
-output "role_arn" {
-  value = aws_iam_role.lambda_exec_role.arn
+output "ecs_task_execution_role_arn" {
+  value = aws_iam_role.ecs_execution.arn
 }

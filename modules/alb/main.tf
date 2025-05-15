@@ -1,49 +1,37 @@
-resource "aws_lb" "this" {
+# modules/alb/main.tf
+
+resource "aws_lb" "app_lb" {
   name               = var.name
-  internal           = var.internal
+  internal           = false
   load_balancer_type = "application"
-  security_groups    = var.security_groups
-  subnets            = var.subnets
-
-  enable_deletion_protection = var.enable_deletion_protection
-
-  tags = var.tags
+  subnets            = var.subnet_ids
+  security_groups    = [var.sg_id]
 }
 
-resource "aws_lb_target_group" "this" {
-  name     = var.target_group_name
-  port     = var.target_group_port
+resource "aws_lb_target_group" "tg" {
+  name     = "ecs-tg"
+  port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id
-
+  target_type = "ip" 
   health_check {
-    path                = "/"
+    path                = "/health"  # ✅ Update to your app’s real health endpoint
     protocol            = "HTTP"
     matcher             = "200-399"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
-    port                = 80
   }
 
-  tags = var.tags
 }
 
-resource "aws_lb_listener" "this" {
-  load_balancer_arn = aws_lb.this.arn
+resource "aws_lb_listener" "listener" {
+  load_balancer_arn = aws_lb.app_lb.arn
   port              = 80
   protocol          = "HTTP"
-
   default_action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.this.arn
+    target_group_arn = aws_lb_target_group.tg.arn
   }
-}
-
-resource "aws_lb_target_group_attachment" "tg_attachment" {
-  count            = length(var.instance_id)
-  target_group_arn = aws_lb_target_group.this.arn
-  target_id        = var.instance_id[count.index]
-  port             = var.target_group_attachment_port
 }
