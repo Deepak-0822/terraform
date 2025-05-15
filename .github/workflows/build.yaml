@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       ecr_repo_name:
-        description: 'Docker image name to push (e.g., my-app)'
+        description: 'repo name'
         required: true
         type: string
       docker_tag:
@@ -33,6 +33,7 @@ jobs:
         with:
           repository: ${{ inputs.repo_name }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          path: cloned-repo
 
       - name: Configure AWS Credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
