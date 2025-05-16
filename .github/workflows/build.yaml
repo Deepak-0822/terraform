@@ -66,9 +66,3 @@ jobs:
 
           echo "Pushing Docker image to ECR..."
           docker push ${ECR_IMAGE}
-
-
-    # appointment = {
-    #   image = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/appointment-service:v1"
-    #   container_port = 3001
-    # }

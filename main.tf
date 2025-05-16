@@ -40,6 +40,9 @@ module "ecs_stack" {
       image = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/patient-service:v2"
       container_port = 3000
     }
-
+    appointment = {
+      image = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/appointment-service:v1"
+      container_port = 3001
+    }
   }
 }
