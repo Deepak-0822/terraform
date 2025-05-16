@@ -22,10 +22,19 @@ resource "aws_ecs_task_definition" "services" {
         containerPort = each.value.container_port
         hostPort      = each.value.container_port
         protocol      = "tcp"
-      }]
+      }],
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/${each.key}"
+          awslogs-region        = "ap-south-1"
+          awslogs-stream-prefix = "ecs"
+        }
+      }
     }
   ])
 }
+
 
 resource "aws_ecs_service" "services" {
   for_each        = var.services
@@ -36,14 +45,25 @@ resource "aws_ecs_service" "services" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets         = var.subnet_ids
-    security_groups = [var.sg_id]
+    subnets          = var.subnet_ids
+    security_groups  = [var.sg_id]
     assign_public_ip = true
   }
 
   load_balancer {
-    target_group_arn = var.alb_target_group_arn
+    target_group_arn = var.alb_target_group_arns[each.key]
     container_name   = each.key
     container_port   = each.value.container_port
   }
+
+  depends_on = [
+    aws_ecs_task_definition.services,
+  ]
+}
+
+resource "aws_cloudwatch_log_group" "ecs_logs" {
+  for_each = var.services
+
+  name              = "/ecs/${each.key}"
+  retention_in_days = 7
 }

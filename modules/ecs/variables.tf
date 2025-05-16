@@ -18,15 +18,14 @@ variable "sg_id" {
   type        = string
 }
 
-variable "alb_target_group_arn" {
-  description = "ALB Target Group ARN"
-  type        = string
-}
-
 variable "services" {
   description = "Map of ECS services with image and port"
   type = map(object({
     image           = string
     container_port = number
   }))
+}
+
+variable "alb_target_group_arns" {
+  type = map(string)
 }

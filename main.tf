@@ -33,16 +33,20 @@ module "ecs_stack" {
   execution_role_arn = module.iam.ecs_task_execution_role_arn
   subnet_ids         = module.vpc.public_subnet_ids
   sg_id              = module.sg.sg_id
-  alb_target_group_arn = module.alb.target_group_arn
+
+  alb_target_group_arns = {
+    patient     = module.alb.patients_tg_arn
+    appointment = module.alb.appointments_tg_arn
+  }
 
   services = {
     patient = {
-      image = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/patient-service:v2"
-      container_port = 3000
+      image          = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/patient-service:v3"
+      container_port = 80
     }
     appointment = {
-      image = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/appointment-service:v1"
-      container_port = 3001
+      image          = "971422676158.dkr.ecr.ap-south-1.amazonaws.com/appointment-service:v4"
+      container_port = 80
     }
   }
 }

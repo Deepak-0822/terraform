@@ -1,5 +1,3 @@
-# modules/alb/main.tf
-
 resource "aws_lb" "app_lb" {
   name               = var.name
   internal           = false
@@ -8,14 +6,16 @@ resource "aws_lb" "app_lb" {
   security_groups    = [var.sg_id]
 }
 
-resource "aws_lb_target_group" "tg" {
-  name     = "ecs-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
-  target_type = "ip" 
+# Target Group for Patients
+resource "aws_lb_target_group" "patients_tg" {
+  name        = "tg-patients"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
   health_check {
-    path                = "/health"  # ✅ Update to your app’s real health endpoint
+    path                = "/health"
     protocol            = "HTTP"
     matcher             = "200-399"
     interval            = 30
@@ -23,15 +23,73 @@ resource "aws_lb_target_group" "tg" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
   }
-
 }
 
-resource "aws_lb_listener" "listener" {
+# Target Group for Appointments
+resource "aws_lb_target_group" "appointments_tg" {
+  name        = "tg-appointments"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+  target_type = "ip"
+
+  health_check {
+    path                = "/health"
+    protocol            = "HTTP"
+    matcher             = "200-399"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
+}
+
+# One Listener
+resource "aws_lb_listener" "http_listener" {
   load_balancer_arn = aws_lb.app_lb.arn
   port              = 80
   protocol          = "HTTP"
+
   default_action {
+    type = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Not found"
+      status_code  = "404"
+    }
+  }
+}
+
+# Listener Rule for /patients
+resource "aws_lb_listener_rule" "patients_rule" {
+  listener_arn = aws_lb_listener.http_listener.arn
+  priority     = 10
+
+  action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.tg.arn
+    target_group_arn = aws_lb_target_group.patients_tg.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/patients*", "/patients/*"]
+    }
+  }
+}
+
+# Listener Rule for /appointments
+resource "aws_lb_listener_rule" "appointments_rule" {
+  listener_arn = aws_lb_listener.http_listener.arn
+  priority     = 20
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.appointments_tg.arn
+  }
+
+  condition {
+    path_pattern {
+      values = ["/appointments*", "/appointments/*"]
+    }
   }
 }
