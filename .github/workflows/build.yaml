@@ -9,7 +9,7 @@ on:
         type: string
       service_folder:
         description: 'Subfolder name for the microservice (e.g., patient-service)'
-        required: true
+        required: false
         type: string
       ecr_repo_name:
         description: 'ECR repo name (e.g., my-app)'
