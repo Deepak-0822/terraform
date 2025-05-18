@@ -12,7 +12,7 @@ db_password                    = "admin123"
 
 ami_id             = "ami-0e35ddab05955cf57"
 instance_type      = "t2.micro"
-subnet_id          = "subnet-031fcb2659eff0fcf"
-security_group_ids = ["sg-09997a0b0fbffa351"]
-key_name           = "key-new"
+subnet_id          = "subnet-0fbb3fc18e4c94bc5"
+security_group_ids = ["sg-01ef8f8570f46a7f2"]
+key_name           = "Test"
 instance_name      = "my-ec2-instance"

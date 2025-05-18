@@ -61,7 +61,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu_utilization_alarm" {
   namespace           = "AWS/EC2"
   period              = 300
   statistic           = "Average"
-  threshold           = 80
+  threshold           = 60
   alarm_description   = "Alarm when CPU exceeds 80% for EC2 instance"
   alarm_actions = [module.sns.topic_arn]
   dimensions = {
