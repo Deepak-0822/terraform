@@ -1,7 +1,7 @@
 module "vpc_ngnix" {
   source = "./modules/vpc"
 
-  name = "${var.environment}-${var.project_name}-vpc"
+  name = "${var.environment}-${var.project_name}-vpc-ngnix"
   cidr = var.vpc_cidr
   enable_dns_hostnames       = true
   
