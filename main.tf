@@ -23,7 +23,7 @@ module "ec2_instance_focalboard" {
   ami  = "ami-0e35ddab05955cf57"
   associate_public_ip_address = true
   instance_type          = var.instance_type
-  key_name               = "ec2-key"
+  key_name               = "Test"
   user_data = file("${path.module}/focalboard_data.sh")
   #vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
   subnet_id              = module.vpc.public_subnets[1]  # Access the first (or desired) public subnet ID from the list
