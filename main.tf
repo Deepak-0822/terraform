@@ -56,12 +56,12 @@ module "alb" {
       description = "HTTP web traffic"
       cidr_ipv4   = "0.0.0.0/0"
     }
-    all_https = {
-      from_port   = 443
-      to_port     = 443
-      ip_protocol = "tcp"
-      description = "HTTPS web traffic"
-      cidr_ipv4   = "0.0.0.0/0"
+    all_traffic = {
+        "from_port": 0,
+        "to_port": 65535,
+        "ip_protocol": "all",
+        "description": "Allow all traffic",
+        "cidr_ipv4": "0.0.0.0/0"
     }
   }
  
