@@ -99,6 +99,6 @@ module "alb" {
   }
  
   depends_on = [
-    module.ec2_ec2_instance_focalboard
+    module.ec2_instance_focalboard
   ]
 }
