@@ -87,7 +87,7 @@ module "alb" {
     focalboard-instance = {
       name_prefix = "h1"
       protocol    = "HTTP"
-      port        = 80
+      port        = 8000
       target_type = "instance"
       target_id   =  module.ec2_instance_focalboard.id
     }
