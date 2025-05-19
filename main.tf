@@ -26,7 +26,7 @@ module "ec2_instance_ngnix" {
   key_name               = "Test"
   user_data = file("${path.module}/focalboard_data.sh")
   #vpc_security_group_ids = [module.security_group.security_group_id] # Use the output name
-  subnet_id              = module.vpc.public_subnets[1]  # Access the first (or desired) public subnet ID from the list
+  subnet_id              = module.vpc_ngnix.public_subnets[1]  # Access the first (or desired) public subnet ID from the list
 
   tags = {
     Terraform   = "true"
