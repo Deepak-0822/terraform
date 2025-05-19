@@ -71,16 +71,16 @@ jobs:
       # - name: Run Terraform Lint
       #   run: tflint --init
         
-      - name: Terraform Plan        
-        run: |  
-         terraform plan
+      # - name: Terraform Plan        
+      #   run: |  
+      #    terraform plan
 
-      - name: Terraform Apply
-        env:
-          TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
-        working-directory: /home/runner/work/terraform/terraform
-        run: |
-         terraform apply -auto-approve
+      # - name: Terraform Apply
+      #   env:
+      #     TF_VAR_private_key_name: ${{ secrets.EC2_PRIVATE_KEY }}
+      #   working-directory: /home/runner/work/terraform/terraform
+      #   run: |
+      #    terraform apply -auto-approve
 
       # - name: Upload Terraform logs
       #   uses: actions/upload-artifact@v4
@@ -88,5 +88,5 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      # - name: Terraform destroy
-      #   run: terraform destroy --auto-approve
+      - name: Terraform destroy
+        run: terraform destroy --auto-approve
