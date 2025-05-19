@@ -1,4 +1,4 @@
-module "vpc" {
+module "vpc_ngnix" {
   source = "./modules/vpc"
 
   name = "${var.environment}-${var.project_name}-vpc"
@@ -16,10 +16,10 @@ module "vpc" {
 }
 
 #### Ec2
-module "ec2_instance_focalboard" {
+module "ec2_instance_ngnix" {
   source = "./modules/ec2"
 
-  name = "${var.environment}-${var.project_name}-ec2-focalboard"
+  name = "${var.environment}-${var.project_name}-ec2-ngnix"
   ami  = "ami-0e35ddab05955cf57"
   associate_public_ip_address = true
   instance_type          = var.instance_type
@@ -32,73 +32,4 @@ module "ec2_instance_focalboard" {
     Terraform   = "true"
     Environment = "${var.environment}-${var.project_name}"
   }
-}
-
-### ALB
-
-module "alb" {
-  source = "./modules/alb"
- 
-  name    = "${var.environment}-${var.project_name}-alb-focalboard"
-  vpc_id  = module.vpc.vpc_id
-  subnets = [
-    module.vpc.public_subnets[0],
-    module.vpc.public_subnets[1],
-    module.vpc.public_subnets[2]
-  ]
- 
-  # Security Group
-  security_group_ingress_rules = {
-    all_http = {
-      from_port   = 80
-      to_port     = 80
-      ip_protocol = "tcp"
-      description = "HTTP web traffic"
-      cidr_ipv4   = "0.0.0.0/0"
-    }
-    all_traffic = {
-        "from_port": 0,
-        "to_port": 65535,
-        "ip_protocol": "all",
-        "description": "Allow all traffic",
-        "cidr_ipv4": "0.0.0.0/0"
-    }
-  }
- 
-  security_group_egress_rules = {
-    all = {
-      ip_protocol = "-1"
-      cidr_ipv4   = "0.0.0.0/0"
-    }
-  }
- 
-    listeners = {
-      image-http = {
-        port            = 80
-        protocol        = "HTTP"
-        
-        forward = {
-          target_group_key = "focalboard-instance"
-        }
-      }
-    }
- 
-  target_groups = {
-    focalboard-instance = {
-      name_prefix = "h1"
-      protocol    = "HTTP"
-      port        = 8000
-      target_type = "instance"
-      target_id   =  module.ec2_instance_focalboard.id
-    }
-  }
- 
-  tags = {
-    Environment = "${var.environment}"
-    Project     = "${var.project_name}"
-  }
- 
-  depends_on = [
-    module.ec2_instance_focalboard
-  ]
 }
