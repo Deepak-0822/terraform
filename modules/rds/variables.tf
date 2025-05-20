@@ -65,6 +65,7 @@ variable "rds_instance_tags" {
 }
 
 variable "subnet_group_name" {}
+
 variable "subnet_ids" {
   type = list(string)
 }
