@@ -85,5 +85,5 @@ variable "rds_username" {
 }
 
 variable sg_id {
-  type = string
+  type = list(string)
 }
