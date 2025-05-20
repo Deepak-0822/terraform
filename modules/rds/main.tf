@@ -23,7 +23,7 @@ resource "aws_db_instance" "my_rds_instance" {
   instance_class            = var.rds_instance_class
   allocated_storage         = var.rds_instance_allocated_storage
   db_subnet_group_name      = aws_db_subnet_group.generic_subnet_group.name
-  vpc_security_group_ids    = [module.securitygroups.sg_out]
+  vpc_security_group_ids    = var.sg_id
   multi_az                  = var.rds_instance_multi_az
   storage_encrypted         = var.rds_instance_storage_encrypted
   kms_key_id                = var.rds_instance_kms_key_id

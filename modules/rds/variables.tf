@@ -83,3 +83,7 @@ variable "rds_username" {
   type        = string
   sensitive   = true
 }
+
+variable sg_id {
+  type = string
+}

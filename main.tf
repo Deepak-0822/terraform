@@ -60,4 +60,5 @@ module "rds_instance" {
  
   subnet_group_name = "${var.environment}-${var.project_name}-aurora-subnet-group"
   subnet_ids        = [module.vpc_aurorards.public_subnets]
+  sg_id             = module.sg.sg_id
 }
