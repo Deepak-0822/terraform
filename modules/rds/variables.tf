@@ -35,10 +35,6 @@ variable "rds_instance_class" {
   type = string
 }
 
-variable "rds_instance_allocated_storage" {
-  type = string
-}
-
 variable "rds_instance_multi_az" {
   type = bool
 }

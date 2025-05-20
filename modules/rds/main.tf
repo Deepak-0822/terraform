@@ -21,7 +21,6 @@ resource "aws_db_instance" "my_rds_instance" {
   identifier                = var.rds_instance_identifier
   engine                    = var.rds_instance_engine
   instance_class            = var.rds_instance_class
-  allocated_storage         = var.rds_instance_allocated_storage
   db_subnet_group_name      = aws_db_subnet_group.generic_subnet_group.name
   vpc_security_group_ids    = var.sg_id
   multi_az                  = var.rds_instance_multi_az
