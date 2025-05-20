@@ -20,6 +20,7 @@ resource "random_password" "rds_password" {
 resource "aws_db_instance" "my_rds_instance" {
   identifier                = var.rds_instance_identifier
   engine                    = var.rds_instance_engine
+  engine_version            = var.engine_version
   instance_class            = var.rds_instance_class
   db_subnet_group_name      = aws_db_subnet_group.generic_subnet_group.name
   vpc_security_group_ids    = var.sg_id

@@ -31,6 +31,9 @@ variable "rds_instance_engine" {
   type = string
 }
 
+variable "engine_version" {
+    type = string
+}
 variable "rds_instance_class" {
   type = string
 }
