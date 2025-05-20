@@ -39,15 +39,29 @@ module "sg" {
 }
 
 module "rds_instance" {
-  source = "./modules/rds"
-
-  environment                 = var.environment
-  project_name                = var.project_name
-  rds_instance_identifier     = "${var.environment}-${var.project_name}-rds-aurora"
-  rds_instance_engine         = "aurora-postgresql"
-  rds_instance_class          = "db.r5.large"
+  source = "./modules/rds" # Path to your RDS module
+ 
+  rds_instance_identifier        = "${var.environment}-${var.project_name}-rds-aurora"
+  rds_instance_engine            = "aurora-postgresql"
+  rds_instance_class             = "db.r5.large"
   rds_instance_allocated_storage = 20
-  rds_instance_multi_az       = false
-  rds_instance_storage_encrypted = true # Example
-  rds_instance_db_name        = "${var.environment}-${var.project_name}-mydb"
+  rds_instance_multi_az          = false
+  rds_instance_storage_encrypted = true
+  rds_instance_kms_key_id        = var.rds_kms_key_id
+  rds_instance_db_name           = "${var.environment}_${var.project_name}_db"
+ 
+  rds_instance_tags = {
+    Environment = var.environment
+    Project     = var.project_name
+  }
+ 
+  rds_username           = "admin"
+  parameter_group_name   = "${var.environment}-${var.project_name}-aurora-pg"
+  parameter_group_family = "aurora-postgresql9.6"
+ 
+  subnet_group_name = "${var.environment}-${var.project_name}-aurora-subnet-group"
+  subnet_ids        = module.vpc.public_subnet_ids
+ 
+  # Assuming your security group module returns sg ID as `sg_out`
+  security_group_module = module.sg.sg_out
 }
