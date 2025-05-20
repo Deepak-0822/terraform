@@ -59,6 +59,6 @@ module "rds_instance" {
   parameter_group_family = "aurora-postgresql9.6"
  
   subnet_group_name = "${var.environment}-${var.project_name}-aurora-subnet-group"
-  subnet_ids        = [module.vpc_aurorards.public_subnets]
+  subnet_ids = [module.vpc_aurorards.public_subnets[0].id, module.vpc_aurorards.public_subnets[1].id]
   sg_id             = [module.sg.sg_id]
 }
