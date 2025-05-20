@@ -42,7 +42,7 @@ module "rds_instance" {
   source = "./modules/rds" # Path to your RDS module
  
   rds_instance_identifier        = "${var.environment}-${var.project_name}-rds-aurora"
-  rds_instance_engine            = "aurora-postgresql"
+  rds_instance_engine            =  "aurora-postgresql"
   rds_instance_class             = "db.r5.large"
   engine_version       = "13.6"
   rds_instance_multi_az          = false
