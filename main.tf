@@ -60,7 +60,4 @@ module "rds_instance" {
  
   subnet_group_name = "${var.environment}-${var.project_name}-aurora-subnet-group"
   subnet_ids        = module.vpc.public_subnet_ids
- 
-  # Assuming your security group module returns sg ID as `sg_out`
-  security_group_module = module.sg.sg_id
 }
