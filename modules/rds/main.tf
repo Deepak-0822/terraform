@@ -31,7 +31,6 @@ resource "aws_db_subnet_group" "generic_subnet_group" {
 resource "aws_rds_cluster" "aurora_cluster" {
   cluster_identifier      = var.rds_instance_identifier
   engine                  = "aurora-postgresql"
-  engine_version          = var.engine_version
   master_username         = var.rds_username
   master_password         = random_password.rds_password.result
   database_name           = var.rds_instance_db_name
