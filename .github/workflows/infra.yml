@@ -71,9 +71,9 @@ jobs:
       # - name: Run Terraform Lint
       #   run: tflint --init
         
-      # - name: Terraform Plan        
-      #   run: |  
-      #    terraform plan
+      - name: Terraform Plan        
+        run: |  
+         terraform plan
 
       # - name: Terraform Apply
       #   env:
@@ -88,5 +88,5 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      - name: Terraform destroy
-        run: terraform destroy --auto-approve
+      # - name: Terraform destroy
+      #   run: terraform destroy --auto-approve
