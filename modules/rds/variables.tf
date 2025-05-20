@@ -24,7 +24,7 @@ variable "secret_values" {
 }
 
 variable "rds_instance_identifier" {
-  type = map(string)
+  type = string
 }
 
 variable "rds_instance_engine" {
@@ -54,7 +54,7 @@ variable "rds_instance_kms_key_id" {
 }
 
 variable "rds_instance_db_name" {
-  type = map(string)
+  type = string
 }
 
 variable "rds_instance_tags" {

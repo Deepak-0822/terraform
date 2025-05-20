@@ -35,7 +35,7 @@ module "ec2_instance_aurorards" {
 
 module "sg" {
   source  = "./modules/security_group"
-  vpc_id  = module.vpc_ngnix.vpc_id
+  vpc_id  = module.vpc_aurorards.vpc_id
 }
 
 module "rds_instance" {
@@ -59,5 +59,5 @@ module "rds_instance" {
   parameter_group_family = "aurora-postgresql9.6"
  
   subnet_group_name = "${var.environment}-${var.project_name}-aurora-subnet-group"
-  subnet_ids        = module.vpc.public_subnet_ids
+  subnet_ids        = module.vpc_aurorards.public_subnet_ids
 }
