@@ -39,10 +39,6 @@ variable "rds_instance_allocated_storage" {
   type = string
 }
 
-variable "rds_instance_subnet_group" {
-  type = string
-}
-
 variable "rds_instance_multi_az" {
   type = bool
 }
@@ -81,26 +77,6 @@ variable "parameter_group_family" {
   type = string
 }
 
-# variable "my_db_proxy" {
-#   type  = string
-# }
-
-variable "rds_secret_id" {
-  type  = string
-}
-
-# variable "proxy_role_arn" {
-#   type        = string
-# }
-
-
-variable "rds_instance_parameter_description" {
-  type        = string
-}
-
-variable "rds_instance_parameter_group_family" {
-  type        = string
-}
 
 variable "rds_username" {
   type        = string

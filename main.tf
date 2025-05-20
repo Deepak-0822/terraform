@@ -46,8 +46,7 @@ module "rds_instance" {
   rds_instance_class             = "db.r5.large"
   rds_instance_allocated_storage = 20
   rds_instance_multi_az          = false
-  rds_instance_storage_encrypted = true
-  rds_instance_kms_key_id        = var.rds_kms_key_id
+  rds_instance_storage_encrypted = false
   rds_instance_db_name           = "${var.environment}_${var.project_name}_db"
  
   rds_instance_tags = {
@@ -63,5 +62,5 @@ module "rds_instance" {
   subnet_ids        = module.vpc.public_subnet_ids
  
   # Assuming your security group module returns sg ID as `sg_out`
-  security_group_module = module.sg.sg_out
+  security_group_module = module.sg.sg_id
 }
