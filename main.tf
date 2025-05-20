@@ -54,7 +54,7 @@ module "rds_instance" {
     Project     = var.project_name
   }
  
-  rds_username           = "admin"
+  rds_username           = "dbadmin"
   parameter_group_name   = "${var.environment}-${var.project_name}-aurora-pg"
   parameter_group_family = "aurora-postgresql9.6"
  
