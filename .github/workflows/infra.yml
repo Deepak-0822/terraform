@@ -1,7 +1,7 @@
 name: Terraform Infra Setup 
 
 on:
-  # push:
+  push:
   workflow_dispatch:
 env:
   AWS_REGION: ap-south-1
@@ -25,10 +25,10 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
 
-      # - name: Install  dependencies and create ZIP
-      #   run: |
-      #     zip *.zip *.py
-      #     ls
+      - name: Install  dependencies and create ZIP
+        run: |
+          zip *.zip *.py
+          ls
 
       # - name: Install Terraform Lint
       #   run: |
@@ -73,9 +73,9 @@ jobs:
       # - name: Run Terraform Lint
       #   run: tflint --init
         
-      # - name: Terraform Plan        
-      #   run: |  
-      #    terraform plan
+      - name: Terraform Plan        
+        run: |  
+         terraform plan
 
       # - name: Terraform Apply
       #   env:
@@ -90,8 +90,8 @@ jobs:
       #     name: terraform-logs
       #     path: ./log.txt
 
-      - name: Terraform destroy
-        run: terraform destroy --auto-approve
+      # - name: Terraform destroy
+      #   run: terraform destroy --auto-approve
 
 
 
