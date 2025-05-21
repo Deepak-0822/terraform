@@ -27,7 +27,7 @@ jobs:
 
       - name: Install  dependencies and create ZIP
         run: |
-          zip *.zip *.py
+          zip lambda_function.zip lambda_function.py
           ls
 
       # - name: Install Terraform Lint
