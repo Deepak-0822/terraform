@@ -8,3 +8,7 @@ variable "memory_size" {
 variable "timeout" {
   default = 10
 }
+
+variable "cognito_domain_prefix" {
+  default = "helloworld-demo-unique"
+}
