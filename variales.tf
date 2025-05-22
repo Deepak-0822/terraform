@@ -6,7 +6,7 @@ variable "memory_size" {
   default = 512
 }
 variable "timeout" {
-  default = 10
+  default = 60
 }
 
 variable "cognito_domain_prefix" {
