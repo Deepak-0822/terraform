@@ -1,70 +1,72 @@
-import json
 import boto3
-import fitz  # PyMuPDF
 import os
-import tempfile
+import psycopg2
+import tiktoken
+import uuid
+import json
+import cohere  # ✅ Replace Bedrock with Cohere
+from PyPDF2 import PdfReader
+from botocore.exceptions import ClientError
 
-def extract_text_from_pdf(pdf_path):
-    text = ""
-    pdf_doc = fitz.open(pdf_path)
-    for page in pdf_doc:
-        text += page.get_text()
-    return text
-
-def ask_claude(text, question):
-    client = boto3.client("bedrock-runtime", region_name="us-east-1")
-    model_id = "anthropic.claude-3-5-sonnet-20240620-v1:0"
-
-    prompt = f"""You are a helpful assistant. Use the following document content to answer the question.
-
-Document:
-{text}
-
-Question: {question}
-Answer:"""
-
-    response = client.invoke_model(
-        contentType="application/json",
-        body=json.dumps({
-            "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": 1000,
-            "temperature": 0.5,
-            "messages": [{"role": "user", "content": prompt}]
-        }),
-        modelId=model_id
-    )
-
-    result = json.loads(response['body'].read())
-    return result["content"][0]["text"]
+# --- Configuration ---
+DB_SECRET_NAME = "rds!db-c0833db3-0284-4e98-85a7-0d8558ce9d83"
+REGION = "us-east-1"
+CHUNK_SIZE = 500
+COHERE_API_KEY = os.environ.get("COHERE_API_KEY")  # ✅ Set this in Lambda env vars
+COHERE_MODEL_ID = "embed-v4.0"
 
 def lambda_handler(event, context):
-    try:
-        body = {}
-        if event and "body" in event and event["body"]:
-            body = json.loads(event["body"])
+    s3_bucket = 'demo-tfstate2'
+    s3_key = 'guru/Use-case-7-apigateway-AI-test.pdf'
+    s3 = boto3.client('s3')
 
-        question = body.get("question")
-        bucket = 'demo-tfstate2'
-        key = 'guru/Use-case-7-apigateway-AI-test.pdf'
+    # Download file
+    tmp_file = f"/tmp/{uuid.uuid4()}.pdf"
+    s3.download_file(s3_bucket, s3_key, tmp_file)
 
-        if not all([bucket, key, question]):
-            return {
-                "statusCode": 400,
-                "body": json.dumps({"error": "Missing bucket, key, or question"})
-            }
+    # Process PDF
+    text = parse_pdf(tmp_file)
+    chunks = chunk_text(text)
+    embeddings = get_embeddings(chunks)
 
-        s3 = boto3.client("s3")
-        file_name = key.split("/")[-1]
-        local_path = f"/tmp/{file_name}"
-        s3.download_file(bucket, key, local_path)
+    # Store in PostgreSQL
+    store_in_postgres(chunks, embeddings)
 
-        text = extract_text_from_pdf(local_path)
-        answer = ask_claude(text, question)
+    return {"statusCode": 200, "body": "Embeddings stored successfully"}
 
-        return {
-            "statusCode": 200,
-            "body": json.dumps({"answer": answer})
-        }
+def parse_pdf(file_path):
+    reader = PdfReader(file_path)
+    return "\n".join(page.extract_text() for page in reader.pages if page.extract_text())
 
-    except Exception as e:
-        return {"statusCode": 500, "body": json.dumps({"error": str(e)})}
+def chunk_text(text):
+    tokenizer = tiktoken.get_encoding("cl100k_base")
+    tokens = tokenizer.encode(text)
+    chunks = [tokens[i:i + CHUNK_SIZE] for i in range(0, len(tokens), CHUNK_SIZE)]
+    return [tokenizer.decode(chunk) for chunk in chunks]
+
+def get_embeddings(chunks):
+    co = cohere.Client(COHERE_API_KEY)
+    response = co.embed(
+        texts=chunks,
+        model=COHERE_MODEL_ID,
+        input_type="search_document"
+    )
+    return response.embeddings
+
+def store_in_postgres(chunks, embeddings):
+    secret_client = boto3.client('secretsmanager')
+    secret = json.loads(secret_client.get_secret_value(SecretId=DB_SECRET_NAME)['SecretString'])
+
+    conn = psycopg2.connect(
+        dbname=secret['database-1'],
+        user=secret['postgres'],
+        password=secret['YVLQL>]HN<fMcfno-4ku[mqNB2iY'],
+        host=secret['database-1.czews2w6cjln.ap-south-1.rds.amazonaws.com'],
+        port=secret['5432']
+    )
+    cur = conn.cursor()
+    for chunk, emb in zip(chunks, embeddings):
+        cur.execute("INSERT INTO documents (chunk, embedding) VALUES (%s, %s)", (chunk, emb))
+    conn.commit()
+    cur.close()
+    conn.close()
