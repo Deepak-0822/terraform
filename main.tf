@@ -1,18 +1,21 @@
-module "iam_lambda" {
-  source         = "./modules/iam"
-  lambda_role_name = "claude-sonnet-role"
+module "cloudtrail_monitoring" {
+  source                 = "./modules/cloudtrail_monitoring"
+  sns_arn                = [module.sns.topic_arn]  
+  cloudtrail_s3_bucket   = module.cloudtrail_s3.bucket_name
+  log_group_name         = var.log_group_name
 }
 
-module "lambda_container" {
-  source               = "./modules/lambda"
-  function_name        = "claude-sonnet" 
-  lambda_zip_path      = "./lambda_function.zip"
-  role_arn             = module.iam_lambda.role_arn
-  layer_arn            = ["arn:aws:lambda:ap-south-1:971422676158:layer:fitzz-layer:2", "arn:aws:lambda:ap-south-1:971422676158:layer:puf-layer:1"]
+module "sns" {
+  source        = "./modules/sns"
+  topic_name    = "cloudtrail-sns-topic"
+  email_address = "deepak-b@hcltech.com"
 }
 
-module "api_gateway" {
-  source               = "./modules/apigateway"
-  lambda_function_name = module.lambda_container.lambda_name
-  region               = "ap-south-1"
+
+data "aws_caller_identity" "current" {}
+
+module "cloudtrail_s3" {
+  source      = "./modules/s3"
+  bucket_name = "cloudtrail-log-bucket-123"
+  account_id  = data.aws_caller_identity.current.account_id
 }

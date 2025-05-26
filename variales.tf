@@ -12,3 +12,19 @@ variable "timeout" {
 variable "cognito_domain_prefix" {
   default = "helloworld-demo-unique"
 }
+
+variable "region" {
+  default = "us-east-1"
+}
+
+
+variable "cloudtrail_s3_bucket" {
+  description = "S3 bucket to store CloudTrail logs"
+  type        = string
+  default     = "demo-tfstate-test"
+}
+
+variable "log_group_name" {
+  description = "CloudWatch Logs group name"
+  default     = "/aws/cloudtrail/login-events"
+}
