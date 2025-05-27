@@ -5,6 +5,12 @@ module "cloudtrail_monitoring" {
   log_group_name         = var.log_group_name
 }
 
+module "sns" {
+  source        = "./modules/sns"
+  topic_name    = "cloudtrail-sns-topic"
+  email_address = "dee@hcltech.com"
+}
+
 
 data "aws_caller_identity" "current" {}
 
