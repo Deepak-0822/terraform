@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+ 
+Description: Create an S3 bucket
+ 
+Parameters:
+  BucketName:
+    Type: String
+    Description: Name of the S3 bucket to create
+    AllowedPattern: '^[a-z0-9-]{3,63}$'
+    ConstraintDescription: Bucket name must be 3-63 characters, lowercase letters, numbers, and hyphens only.
+ 
+  Region:
+    Type: String
+    Description: "Region to deploy the S3 bucket"
+    AllowedValues:
+      - us-east-1
+      - us-west-1
+      - us-west-2
+   
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+      VersioningConfiguration:
+        Status: Enabled
+ 
+Outputs:
+  BucketName:
+    Description: Name of the created S3 bucket
+    Value: !Ref MyS3Bucket

@@ -1,21 +1,17 @@
-module "cloudtrail_monitoring" {
-  source                 = "./modules/cloudtrail_monitoring"
-  sns_arn                = [module.sns.topic_arn]  
-  cloudtrail_s3_bucket   = module.cloudtrail_s3.bucket_name
-  log_group_name         = var.log_group_name
+module "service_catalog" {
+  source                = "./modules/service_catalog"
+  portfolio_name        = "S3 Portfolio"
+  portfolio_description = "Portfolio for provisioning S3 buckets"
+  provider_name         = "test"
+
+  product_name   = "S3 Bucket Product"
+  owner          = "service_catalog_test"
+  artifact_name  = "v1"
+  template_url   = "https://cloudtrail-log-bucket-1234.s3.ap-south-1.amazonaws.com/test.yaml"
+  launch_role_arn = "arn:aws:iam::971422676158:role/service-catalog-role"
+  user_arn       = "arn:aws:iam::971422676158:user/service_catlog"
+
+  tag_key   = "env"
+  tag_value = "dev"
 }
 
-module "sns" {
-  source        = "./modules/sns"
-  topic_name    = "cloudtrail-sns-topic"
-  email_address = "dee@hcltech.com"
-}
-
-
-data "aws_caller_identity" "current" {}
-
-module "cloudtrail_s3" {
-  source      = "./modules/s3"
-  bucket_name = "cloudtrail-log-bucket-123"
-  account_id  = data.aws_caller_identity.current.account_id
-}
