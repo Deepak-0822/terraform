@@ -4,5 +4,5 @@ include {
 }
 
 terraform {
-  source = "../terraform/modules/"
+  source = "../data-stack/"
 }
