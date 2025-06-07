@@ -60,11 +60,6 @@ jobs:
           output-method: inject
           git-push: "true"
 
-      - name: Terragrunt Init
-        run: | 
-         terragrunt init
-        continue-on-error: true
-
       - name: Terragrunt Validate
         run: terragrunt validate
 
