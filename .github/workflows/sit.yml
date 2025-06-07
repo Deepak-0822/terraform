@@ -30,10 +30,10 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
 
-      - name: Install  dependencies and create ZIP
-        run: |
-          zip lambda_function.zip lambda_function.py
-          ls
+      # - name: Install  dependencies and create ZIP
+      #   run: |
+      #     zip lambda_function.zip lambda_function.py
+      #     ls
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
