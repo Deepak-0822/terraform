@@ -95,7 +95,7 @@ jobs:
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
         with:          
-          working-dir: ../data-stack/modules
+          working-dir: data-stack
           output-file: README.md
           output-method: inject
           git-push: "true"
