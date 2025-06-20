@@ -1,0 +1,113 @@
+name: sit Terraform Infra Setup 
+
+on:
+ workflow_dispatch:
+    inputs:
+      do_plan:
+        description: "Run terraform plan?"
+        required: false
+        default: "true"
+        type: boolean
+      do_apply:
+        description: "Run terraform apply?"
+        required: false
+        default: "false"
+        type: boolean
+      do_destroy:
+        description: "Run terraform destroy?"
+        required: false
+        default: "false"
+        type: boolean
+env:
+  AWS_REGION: ap-south-1
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  terraform:
+    name: Terraform Plan & Apply
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: sit
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+
+      - name: Install Terraform Lint
+        run: |
+          wget https://github.com/terraform-linters/tflint/releases/download/v0.50.2/tflint_linux_amd64.zip
+          unzip tflint_linux_amd64.zip
+          sudo mv tflint /usr/local/bin/
+          tflint --version
+
+      - name: Install Checkov 
+        run: |
+          python -m pip install --upgrade pip
+          pip install checkov
+
+      - name: Run Checkov Static Analysis
+        run: |
+          checkov -d . --skip-path .github/* --skip-path k8s/*   --soft-fail
+
+      - name: Install Terragrunt v0.45.4
+        run: |
+          sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.45.4/terragrunt_linux_amd64"
+          sudo chmod +x /bin/terragrunt
+
+      - name: Terragrunt Validate
+        run: terragrunt validate
+
+      - name: Terragrunt Format
+        run: terragrunt fmt
+
+      - name: Run Terragrunt Lint
+        run: tflint --init
+  
+      - name: Terragrunt Plan
+        if: ${{ github.event.inputs.do_plan == 'true' }}
+        run: terragrunt plan 
+  
+      - name: Terragrunt Apply (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' &&  github.event.inputs.do_apply == 'true' }}
+        run: terragrunt apply -auto-approve
+
+      - name: Terragrunt destroy (manual)
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.do_destroy == 'true' }}
+        run: terragrunt destroy -auto-approve 
+
+      - name: Generate terraform docs
+        uses: terraform-docs/gh-actions@main
+        with:          
+          working-dir: ./
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
+
+      - name: Terraform logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: Terraform-logs
+          path: ./Use-case-02/infra/log.txt
+
+
+
+
+
+

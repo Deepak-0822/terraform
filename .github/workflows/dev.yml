@@ -1,4 +1,4 @@
-name: Terraform Infra Setup 
+name: dev Terraform Infra Setup 
 
 on:
  workflow_dispatch:
@@ -66,14 +66,6 @@ jobs:
         run: |
           checkov -d . --skip-path .github/* --skip-path k8s/*   --soft-fail
 
-      - name: Generate terraform docs
-        uses: terraform-docs/gh-actions@main
-        with:          
-          working-dir: ./
-          output-file: README.md
-          output-method: inject
-          git-push: "true"
-
       - name: Install Terragrunt v0.45.4
         run: |
           sudo wget -q -O /bin/terragrunt "https://github.com/gruntwork-io/terragrunt/releases/download/v0.45.4/terragrunt_linux_amd64"
@@ -103,11 +95,11 @@ jobs:
       - name: Generate terraform docs
         uses: terraform-docs/gh-actions@main
         with:          
-          working-dir: ./
+          working-dir: ./dev
           output-file: README.md
           output-method: inject
           git-push: "true"
-          
+
       - name: Terraform logs
         uses: actions/upload-artifact@v4
         with:
