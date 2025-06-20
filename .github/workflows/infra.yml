@@ -45,11 +45,6 @@ jobs:
           aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
           aws-region: ap-south-1
 
-      - name: Install  dependencies and create ZIP
-        run: |
-          zip lambda_function.zip lambda_function.py
-          ls
-
       - name: Install Terraform Lint
         run: |
           wget https://github.com/terraform-linters/tflint/releases/download/v0.50.2/tflint_linux_amd64.zip
