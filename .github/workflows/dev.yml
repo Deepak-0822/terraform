@@ -104,7 +104,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Terraform-logs
-          path: ./log.txt
+          path: dev/log.txt
+
 
 
 
