@@ -59,3 +59,13 @@
 
 No outputs.
 <!-- END_TF_DOCS -->
+
+module "ecs" {
+  source             = "../../modules/ecs"
+  app_name           = "myapp"
+  cluster_name       = "myapp-cluster"
+  image_url          = "${module.ecr.repo_url}:latest"
+  execution_role     = module.iam.execution_role_arn
+  subnet_ids         = ["subnet-abc", "subnet-def"]
+  security_group_id  = "sg-xxxx"
+}
