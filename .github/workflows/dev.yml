@@ -100,6 +100,14 @@ jobs:
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.do_destroy == 'true' }}
         run: terragrunt destroy -auto-approve 
 
+      - name: Generate terraform docs
+        uses: terraform-docs/gh-actions@main
+        with:          
+          working-dir: ./
+          output-file: README.md
+          output-method: inject
+          git-push: "true"
+          
       - name: Terraform logs
         uses: actions/upload-artifact@v4
         with:
