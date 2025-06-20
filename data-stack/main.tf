@@ -1,16 +1,13 @@
-module "vpc_aurorards" {
+module "vpc" {
   source = "./modules/vpc"
 
-  name = "${local.prefix}-${local.project_name}-${local.environment_type}-vpc"
-  cidr = var.vpc_cidr
-  enable_dns_hostnames       = true
-  
-  public_subnets  = var.public_subnets
-  azs             = var.subnet_azs
-
-
+  name = "${var.prefix}-${var.project_name}-${var.environment_type}-vpc"
+  vpc_cidr             = var.vpc_cidr
+  availability_zones   = var.subnet_azs
+  public_subnet_cidrs  = var.public_subnets
+  private_subnet_cidrs = var.private_subnets
+  enable_dns_hostnames = true
   tags = {
-    Terraform = "true"
-    Environment = "${local.prefix}-${local.project_name}-${local.environment_type}"
+    Environment = "${var.prefix}-${var.project_name}-${var.environment_type}"
   }
 }

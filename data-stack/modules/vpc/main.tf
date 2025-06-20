@@ -48,9 +48,10 @@ resource "aws_route_table_association" "public" {
 
  ###private
 locals {
-  create_private_subnets = local.create_vpc && length(var.private_subnet_cidrs) > 0
-  create_vpc = var.create_vpc
+  create_private_subnets = var.enable_private_subnets && length(var.private_subnet_cidrs) > 0
+  create_vpc             = var.create_vpc
 }
+
 
 resource "aws_subnet" "private" {
   count             = local.create_private_subnets ? length(var.private_subnet_cidrs) : 0
@@ -71,15 +72,18 @@ resource "aws_route_table" "private" {
 }
 
 resource "aws_route" "private_nat" {
-  count                     = local.create_private_subnets && length(try(aws_nat_gateway.this, [])) > 0 ? 1 : 0
-  route_table_id            = aws_route_table.private[0].id
-  destination_cidr_block    = "0.0.0.0/0"
-  nat_gateway_id            = aws_nat_gateway.this[0].id
+  count = local.create_private_subnets ? 1 : 0
+
+  route_table_id         = aws_route_table.private[0].id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.this[0].id
+
   depends_on = [
     aws_route_table.private,
     aws_nat_gateway.this,
   ]
 }
+
 
 resource "aws_route_table_association" "private" {
   count          = local.create_private_subnets ? length(var.private_subnet_cidrs) : 0
