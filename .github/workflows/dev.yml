@@ -81,7 +81,7 @@ jobs:
       #   run: tflint --init
   
       - name: Terragrunt init
-        run: terragrunt init -auto-approve
+        run: terragrunt init --terragrunt-non-interactive -auto-approve
 
       - name: Terragrunt Plan
         if: ${{ github.event.inputs.do_plan == 'true' }}
