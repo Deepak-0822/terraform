@@ -80,6 +80,9 @@ jobs:
       # - name: Run Terragrunt Lint
       #   run: tflint --init
   
+      - name: Terragrunt init
+        run: terragrunt init
+
       - name: Terragrunt Plan
         if: ${{ github.event.inputs.do_plan == 'true' }}
         run: terragrunt plan 
