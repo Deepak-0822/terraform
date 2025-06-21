@@ -1,0 +1,83 @@
+name: CI Java Build and Push to AWS ECR
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_name:
+        description: 'GitHub repository to checkout (owner/repo format)'
+        required: true
+        type: string
+      ecr_repo_name:
+        description: 'Docker image name to push (e.g., my-app)'
+        required: true
+        type: string
+      docker_tag:
+        description: 'Docker tag for the image (e.g., latest)'
+        required: true
+        type: string
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: ap-south-1
+
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Set up JDK 21
+      #   uses: actions/setup-java@v4
+      #   with:
+      #     distribution: 'temurin'
+      #     java-version: '21'
+
+      # - name: Build Java Application
+      #   run: |
+      #     echo "Building Java application..."
+      #     mvn clean package -DskipTests
+
+      # - name: Upload Build Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: java-app-artifact
+      #     path: target/*.jar
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials via OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.OIDC_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, Tag, and Push Docker Image
+        run: |
+          AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+          ECR_REGISTRY=${AWS_ACCOUNT_ID}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+          IMAGE_NAME=${{ inputs.ecr_repo_name }}
+          IMAGE_TAG=${{ inputs.docker_tag }}
+          ECR_IMAGE=${ECR_REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}
+
+          echo "Building Docker image..."
+          docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+
+          echo "Tagging Docker image..."
+          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${ECR_IMAGE}
+
+          echo "Pushing Docker image to ECR..."
+          docker push ${ECR_IMAGE}

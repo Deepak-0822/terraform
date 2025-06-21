@@ -1,7 +1,3 @@
 output "api_endpoint" {
-  value = aws_apigatewayv2_api.http_api.api_endpoint
-}
-
-output "api_id" {
-  value = aws_apigatewayv2_api.http_api.id
+  value = aws_apigatewayv2_api.api.api_endpoint
 }
