@@ -1,6 +1,6 @@
 module "ecr" {
   source    = "./modules/ecr"
-  repo_name = "myapp-repo"
+  repo_name =  var.ecr_repo_name
   tags      = { Env = "dev" }
 }
 

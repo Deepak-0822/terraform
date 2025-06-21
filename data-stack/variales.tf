@@ -16,3 +16,8 @@ variable "environment_type" {}
 variable "region" {
   default = "us-east-1"
 }
+
+##ecr
+variables "ecr_repo_name"{
+  
+}
