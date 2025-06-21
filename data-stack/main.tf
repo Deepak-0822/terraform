@@ -1,13 +1,25 @@
-module "vpc" {
-  source = "./modules/vpc"
+module "ecr" {
+  source    = "./modules/ecr"
+  repo_name = "myapp-repo"
+  tags      = { Env = "dev" }
+}
 
-  name = "${var.prefix}-${var.project_name}-${var.environment_type}-vpc"
-  vpc_cidr             = var.vpc_cidr
-  availability_zones   = var.subnet_azs
-  public_subnet_cidrs  = var.public_subnets
-  private_subnet_cidrs = var.private_subnets
-  enable_dns_hostnames = true
-  tags = {
-    Environment = "${var.prefix}-${var.project_name}-${var.environment_type}"
-  }
+module "iam_lambda" {
+  source         = "./modules/iam"
+  lambda_role_name = var.lambda_role_name
+}
+
+module "lambda_container" {
+  source               = "./modules/lambda"
+  lambda_name          = var.lambda_name
+  image_uri            = var.image_uri
+  role_arn             = module.iam_lambda.role_arn
+  memory_size          = var.memory_size
+  timeout              = var.timeout
+}
+
+module "api_gateway" {
+  source               = "./modules/apigateway"
+  lambda_function_name = module.lambda_container.lambda_name
+  region               = "ap-south-1"
 }

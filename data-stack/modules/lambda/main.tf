@@ -1,13 +1,8 @@
-resource "aws_lambda_function" "this" {
-  filename         = var.lambda_zip_path
-  function_name    = var.function_name
+resource "aws_lambda_function" "container_lambda" {
+  function_name = var.lambda_name
   role          = var.role_arn
-  handler          = var.handler
-  runtime          = var.runtime
-  source_code_hash = filebase64sha256(var.lambda_zip_path)
-  timeout          = 60
-
-  environment {
-    variables = var.environment_variables
-  }
+  package_type  = "Image"
+  image_uri     = var.image_uri
+  memory_size   = var.memory_size
+  timeout       = var.timeout
 }
