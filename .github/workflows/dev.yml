@@ -85,7 +85,7 @@ jobs:
 
       - name: Terragrunt Plan
         if: ${{ github.event.inputs.do_plan == 'true' }}
-        run: terragrunt plan -auto-approve
+        run: terragrunt plan
   
       - name: Terragrunt Apply (manual)
         if: ${{ github.event_name == 'workflow_dispatch' &&  github.event.inputs.do_apply == 'true' }}
